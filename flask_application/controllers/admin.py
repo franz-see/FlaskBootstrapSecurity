@@ -7,6 +7,7 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 
 
 class AdminView(TemplateView):
+    blueprint = admin
     route = '/admin'
     template_name = 'security/index.html'
     decorators = [roles_required('admin')]
