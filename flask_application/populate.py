@@ -2,14 +2,13 @@ from flask_application import user_datastore
 
 
 def create_roles():
-    for role in ('admin', 'editor', 'author'):
+    for role in ('admin', 'author'):
         user_datastore.create_role(name=role, description=role)
     user_datastore.commit()
 
 
 def create_users():
     for u in (('matt', 'matt@lp.com', 'password', ['admin'], True),
-              ('joe', 'joe@lp.com', 'password', ['editor'], True),
               ('jill', 'jill@lp.com', 'password', ['author'], True),
               ('tiya', 'tiya@lp.com', 'password', [], False)):
         user_datastore.create_user(email=u[1], password=u[2],
