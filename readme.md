@@ -2,7 +2,6 @@ Flask Heroku Boilerplate Project
 =========================
 http://flask.pocoo.org/
 
-This project is meant to be helpful for those who want to quickly jump into a new flask project. UserAccounts, Caching, Mail, User Registration, Roles, Python Script Commands, and Twitter Bootstrap are already configured.
 
 The Flask Boilerplate Project consists of many projects merged into one to provide the most flexible boilerplate for your flask project.
 
@@ -29,7 +28,7 @@ Installation
 
         pip install -r requirements.txt
     
-5. Edit `flask_application/config.py` to change your mail server, password salt and other settings:
+5. Copy `flask_application/config.py.sample` into `flask_application/config.py` and edit `flask_application/config.py` to change your mail server, password salt and other settings:
 
         class Config(object):
             SECRET_KEY = '{SECRET_KEY}'
@@ -40,10 +39,8 @@ Installation
             MEMCACHED_SERVERS = ['localhost:11211']
             SYS_ADMINS = ['foo@example.com']
 
-            # Mongodb support
-            MONGODB_DB = 'testing'
-            MONGODB_HOST = 'localhost'
-            MONGODB_PORT = 27017
+            # SQLAlchemy support
+            self.SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
             # Configured for Gmail
             DEFAULT_MAIL_SENDER = 'Admin < username@example.com >'
@@ -86,13 +83,13 @@ Credit
 * Flask-Cache
 * python-memcached
 * Flask-Security
-* Flask-MongoEngine
+* Flask-SQLAlchemy
 
 ####Non-Python Projects:
 * Twitter Bootstrap
 
 ####Contributing Projects:
-* https://github.com/swaroopch/flask-boilerplate _The project's structure is built from this_
+* https://github.com/hansonkd/FlaskBootstrapSecurity _The project's structure is built from this_
 * Flask-Security Example App
 * https://github.com/mbr/flask-bootstrap
 
@@ -103,7 +100,7 @@ Usage
 _Run these commands by using `python manage.py <command>`_
 
 
-* `reset_db` - Drops all Mongo documents
+* `reset_db` - Drops all DB schema and recreates the schema. 
 * `populate_db` - Script to fill the database with new data (either for testing or for initial). You can edit the `populate_data` command in `flask_application/populate.py` (Right now it is set up to add Users.)
 * `runserver` - Runs a debug server
 * Commands included with Flask-Security can be found here: http://packages.python.org/Flask-Security/#flask-script-commands and by looking in `flask_application/script.py`
@@ -119,7 +116,7 @@ You can find this in the `style` block of the layout template. You can also simp
 Deploying
 ---------
 
-This app is all ready configured to be deployed on Heroku with MongoHQ (database) and Mandrill (email).
+This app is all ready configured to be deployed on Heroku with Mandrill (email).
 
 Simply add the free tiers of those services, change your `config.py` `SERVER_NAME`, set the production config with `heroku config:set PRODUCTION=yes` and deploy normally.
 
