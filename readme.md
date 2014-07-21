@@ -12,7 +12,7 @@ Installation
 ------------
 1. Download via git:
 
-        git clone git://github.com/hansonkd/FlaskBootstrapSecurity.git
+        git clone git://github.com/franz-see/FlaskBootstrapSecurity.git
 
 2. Change into the cloned directory
 
