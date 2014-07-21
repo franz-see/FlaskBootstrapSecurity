@@ -1,8 +1,10 @@
 {% extends "bootstrap/base.html" %}
 
+{% block html_attribs%} ng-app{% endblock %}
+
 {% block styles %}
 {{super()}}
-    {% assets filters="cssmin", output="gen/packed.css", "css/site.css" %}
+    {% assets filters="cssmin", output="gen/packed.css", "css/site.css", "css/ng-grid.min.css" %}
           <link rel="stylesheet" href="{{ ASSET_URL }}"/>
     {% endassets %}
 {% endblock %}
@@ -46,4 +48,11 @@
     <div class="container-fluid">
     {{ content }}
     </div>
+{% endblock %}
+
+{% block scripts %}
+  {{super()}}
+    {% assets filters="rjsmin", output="gen/packed.js", "js/angular-1.2.20.min.js", "js/angular-resource-1.2.20.min.js", "js/ui-bootstrap-tpls-0.11.0.min.js", "js/ng-grid-2.0.11.min.js" %}
+          <script src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 {% endblock %}

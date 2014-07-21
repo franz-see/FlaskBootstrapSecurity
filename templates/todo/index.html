@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block html_attribs%} ng-app="todo"{% endblock %}
+
+{% block title %}Todo{% endblock %}
+
+{% block styles %}
+{{super()}}
+    {% assets filters="cssmin", output="gen/todo.css", "css/todo.css" %}
+          <link rel="stylesheet" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-7 col-md-offset-1">
+          <h1>Todo</h1>
+          <div ng-controller="TodoCtrl">
+            <div class="gridStyle" ng-grid="gridOptions"></div>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{super()}}
+    {% assets filters="rjsmin", output="gen/todo.js", "js/todo.js" %}
+          <script src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}
+

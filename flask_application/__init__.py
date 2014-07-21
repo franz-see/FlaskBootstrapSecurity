@@ -91,3 +91,15 @@ app.security = Security(app, user_datastore)
 
 from flask_application.controllers.admin import admin
 app.register_blueprint(admin)
+
+# REST
+from flask.ext.restful import Api
+api = Api(app)
+
+# TODO
+from flask_application.controllers.todo import todo
+app.register_blueprint(todo)
+app.register_blueprint(admin)
+
+from flask_application.controllers.todo import TodoListResource
+api.add_resource(TodoListResource, '/api/todo/')
