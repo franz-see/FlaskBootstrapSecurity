@@ -78,15 +78,15 @@ app.cache = Cache(app)
 from flask_application.controllers.frontend import frontend
 app.register_blueprint(frontend)
 
-# MongoEngine
-from flask.ext.mongoengine import MongoEngine
-app.db = MongoEngine(app)
+# SQLAlchemy 
+from flask.ext.sqlalchemy import SQLAlchemy
+app.db = SQLAlchemy(app)
 
-from flask.ext.security import Security, MongoEngineUserDatastore
+from flask.ext.security import Security,SQLAlchemyUserDatastore 
 from flask_application.models import User, Role
 
 # Setup Flask-Security
-user_datastore = MongoEngineUserDatastore(app.db, User, Role)
+user_datastore = SQLAlchemyUserDatastore(app.db, User, Role)
 app.security = Security(app, user_datastore)
 
 from flask_application.controllers.admin import admin

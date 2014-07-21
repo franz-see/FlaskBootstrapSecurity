@@ -12,7 +12,7 @@ def create_users():
               ('joe', 'joe@lp.com', 'password', ['editor'], True),
               ('jill', 'jill@lp.com', 'password', ['author'], True),
               ('tiya', 'tiya@lp.com', 'password', [], False)):
-        user_datastore.create_user(username=u[0], email=u[1], password=u[2],
+        user_datastore.create_user(email=u[1], password=u[2],
                                    roles=u[3], active=u[4])
         user_datastore.commit()
 
