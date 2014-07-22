@@ -39,7 +39,7 @@ class TodoListResource(Resource):
     })
     def get(self, page_size, page):
         total_size = Todo.query.filter_by(owner=current_user.id).count()
-        results = Todo.query.filter_by(owner=current_user.id).offset((page-1) * page_size).limit(page_size).all()
+        results = Todo.query.filter_by(owner=current_user.id).order_by(Todo.date.desc()).offset((page-1) * page_size).limit(page_size).all()
         return {
             'results' : results,
             'page' : page,
