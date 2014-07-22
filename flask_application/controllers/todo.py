@@ -8,6 +8,7 @@ from flask_application import app
 from flask_application.controllers import TemplateView
 from flask_application.ext.flask_restful import DateTimeToMillisField 
 from flask_application.models import Todo
+from flask_application import utils
 
 todo = Blueprint('todo', __name__, url_prefix='/todo') 
 
@@ -28,26 +29,28 @@ class TodoView(TemplateView):
 class TodoListResource(Resource):
 
     @marshal_with({
-        'count':fields.Integer, 
         'results':fields.List(fields.Nested({
             'id':fields.Integer,
             'item':fields.String, 
             'date':DateTimeToMillisField
-        })), 
-        'pagesize':fields.Integer
+        })),
+        'page':fields.Integer, 
+        'page_size':fields.Integer,
+        'total_size':fields.Integer 
     })
-
     def get(self):
         args = parser.parse_args()
 
-        db_max_page_size = app.config['DB_MAX_PAGE_SIZE']
-        page_size = args['s'] if ('s' in args and args['s'] and args['s'] <= db_max_page_size) else db_max_page_size
-        page = args['p'] or 1
+        page_size = utils.get(args, 's', max_value=app.config['DB_MAX_PAGE_SIZE'])
+        page = utils.get(args, 'p', 1)
 
-        count = Todo.query.filter_by(owner=current_user.id).count()
+        print "details : %s" % {'page_size' : page_size, 'page' : page} 
+
+        total_size = Todo.query.filter_by(owner=current_user.id).count()
         results = Todo.query.filter_by(owner=current_user.id).offset((page-1) * page_size).limit(page_size).all()
         return {
-            'count' : count,
             'results' : results,
-            'pagesize' : page_size
+            'page' : page,
+            'page_size' : page_size,
+            'total_size' : total_size
         }
