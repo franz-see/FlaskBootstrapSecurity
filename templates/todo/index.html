@@ -1,3 +1,5 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
 {% extends "base.html" %}
 
 {% block html_attribs%} ng-app="todo"{% endblock %}
@@ -17,17 +19,67 @@
     <div class="row">
         <div class="col-md-7 col-md-offset-1">
           <h1>Todo</h1>
-          <div ng-controller="TodoCtrl">
+          <div ng-controller="TodoListCtrl">
             <div class="gridStyle" ng-grid="gridOptions"></div>
           </div>
         </div>
     </div>
+    <div class="row" ng-controller="TodoModalCtrl">
+        <div class="col-md-offset-1 col-md-1">
+            <a href="#" class="btn btn-primary btn-large" ng-click="openModal()">Add Todo</a>
+        </div>
+        <div class="col-md-1">
+            <a href="#" class="btn btn-danger btn-large disabled">Delete Todo(s)</a>
+        </div>
+    </div>
 </div>
+
+<script type="text/ng-template" id="todoAddCtrl.html">
+    <div ng-controller="TodoAddCtrl">
+        <div class="modal-header">
+            <h3 class="modal-title">Add New Todo</h3>
+        </div>
+        <div class="modal-body">
+            <form action="/api/todo" method="PUT" name="add_new_todo" class="ng-pristine ng-valid form-horizontal">
+                <div class="form-group ">
+                    <label class="control-label col-sm-2" for="item">Item</label>
+
+                    <div class="col-sm-10">
+                        <input class="form-control" id="item" name="item" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="date">Date</label>
+
+                    <div class="col-sm-10">
+                        <p class="input-group">
+                            <input type="text" class="form-control"
+                                   datepicker-popup="{{ '{{format}}' }}" ng-model="dt"
+                                   is-open="opened"
+                                   datepicker-options="dateOptions"
+                                   ng-required="true" close-text="Close"/>
+                              <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openDatePicker($event)">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                              </span>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok('sm')">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </div>
+</script>
+
 {% endblock %}
 
 {% block scripts %}
   {{super()}}
-    {% assets filters="rjsmin", output="gen/todo.js", "js/todo.js" %}
+    {% assets filters="rjsmin", output="gen/todo.js", "js/todo.js", "js/todo/todoService.js", "js/todo/todoListCtrl.js", "js/todo/todoModalCtrl.js", "js/todo/todoAddCtrl.js" %}
           <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}
