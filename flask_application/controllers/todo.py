@@ -6,7 +6,7 @@ from flask.ext.security import login_required
 from flask_login import current_user
 from flask_application import app
 from flask_application.controllers import TemplateView
-from flask_application.ext.flask_restful import DateTimeToMillisField 
+from flask_application.ext.flask_restful import DateTimeToMillisField, unmarshal_with 
 from flask_application.models import Todo
 from flask_application import utils
 
@@ -38,14 +38,11 @@ class TodoListResource(Resource):
         'page_size':fields.Integer,
         'total_size':fields.Integer 
     })
-    def get(self):
-        args = parser.parse_args()
-
-        page_size = utils.get(args, 's', max_value=app.config['DB_MAX_PAGE_SIZE'])
-        page = utils.get(args, 'p', 1)
-
-        print "details : %s" % {'page_size' : page_size, 'page' : page} 
-
+    @unmarshal_with({
+        's' : { 'param_name' : 'page_size', 'type' : int, 'default' : app.config['DB_MAX_PAGE_SIZE'], 'max' : app.config['DB_MAX_PAGE_SIZE'] },
+        'p' : { 'param_name' : 'page', 'type' : int, 'default' : 1 }
+    })
+    def get(self, page_size, page):
         total_size = Todo.query.filter_by(owner=current_user.id).count()
         results = Todo.query.filter_by(owner=current_user.id).offset((page-1) * page_size).limit(page_size).all()
         return {
