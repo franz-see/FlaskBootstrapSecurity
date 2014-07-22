@@ -27,7 +27,6 @@ class TodoView(TemplateView):
 
 class TodoListResource(Resource):
 
-    #@marshal_with({'item':fields.String, 'date':DateTimeToMillisField})
     @marshal_with({
         'count':fields.Integer, 
         'results':fields.List(fields.Nested({
