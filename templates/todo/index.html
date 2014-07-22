@@ -79,7 +79,7 @@
 
 {% block scripts %}
   {{super()}}
-    {% assets filters="rjsmin", output="gen/todo.js", "js/todo.js", "js/todo/todoService.js", "js/todo/todoListCtrl.js", "js/todo/todoModalCtrl.js", "js/todo/todoAddCtrl.js" %}
+    {% assets filters="rjsmin", output="gen/todo.js", "js/todo/todoApp.js", "js/todo/todoService.js", "js/todo/todoListCtrl.js", "js/todo/todoModalCtrl.js", "js/todo/todoAddCtrl.js" %}
           <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}

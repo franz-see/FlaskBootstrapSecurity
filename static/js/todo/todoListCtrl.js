@@ -19,7 +19,7 @@ app.controller('TodoListCtrl', ['$scope', 'todoService', function($scope, todoSe
         pagingOptions: $scope.pagingOptions,
         filterOptions: $scope.filterOptions,
         columnDefs: [{ field: 'item', displayName: 'Item', width: '80%' },
-                     { field: 'date', displayName: 'Date', width: '20%', cellFilter: "date:'MMMM d, yyyy'", cellClass : 'rightAlign' }
+                     { field: 'date', displayName: 'Date', width: '20%', cellFilter: "date:'" + app.dateFormat + "'", cellClass : 'rightAlign' }
         ]
     }
 
