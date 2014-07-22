@@ -25,4 +25,4 @@ pep8==1.5.7
 pyflakes==0.8.1
 webassets==0.10.1
 wsgiref==0.1.2
-
+Flask-RESTful==0.2.12
