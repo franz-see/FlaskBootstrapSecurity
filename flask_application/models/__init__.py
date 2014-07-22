@@ -21,3 +21,9 @@ class User(db.Model, UserMixin):
     confirmed_at = db.Column(db.DateTime())
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
+
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item = db.Column(db.String(255))
+    date = db.Column(db.DateTime()) 
+    owner = db.Column(db.Integer, db.ForeignKey('user.id'))
