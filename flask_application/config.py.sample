@@ -18,6 +18,7 @@ class Config(object):
 
         # SQLAlchemy support
         self.SQLALCHEMY_DATABASE_URI = 'sqlite://'
+        self.DB_QUERY_LIMIT = 20
 
         # Configured for Gmail
         self.DEFAULT_MAIL_SENDER = 'Admin < username@example.com >'

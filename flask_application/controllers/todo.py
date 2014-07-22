@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
-import datetime
-
 from flask import Blueprint 
 from flask.ext.restful import Resource, fields, marshal_with
 from flask.ext.security import login_required
+from flask_login import current_user
+from flask_application import app
 from flask_application.controllers import TemplateView
 from flask_application.ext.flask_restful import DateTimeToMillisField 
 from flask_application.models import Todo
-from flask_login import current_user
 
 todo = Blueprint('todo', __name__, url_prefix='/todo') 
 
@@ -23,13 +22,24 @@ class TodoView(TemplateView):
 
 class TodoListResource(Resource):
 
-    @marshal_with({'item':fields.String, 'date':DateTimeToMillisField})
+    #@marshal_with({'item':fields.String, 'date':DateTimeToMillisField})
+    @marshal_with({
+        'count':fields.Integer, 
+        'results':fields.List(fields.Nested({
+            'id':fields.Integer,
+            'item':fields.String, 
+            'date':DateTimeToMillisField
+        })), 
+        'pagesize':fields.Integer
+    })
     def get(self):
-        results = [{'item': "Moroni", 'date':datetime.datetime(2014,07,01) },
-                {'item': "Tiancum", 'date':datetime.datetime(2013,01,02) },
-                {'item': "Jacob", 'date':datetime.datetime(2014,03,05) },
-                {'item': "Nephi", 'date':datetime.datetime(2015,11,07) },
-                {'item': "Enos", 'date':datetime.datetime(2014,10,13) }
-               ]
-        results = Todo.query.filter_by(owner=current_user.id).all()
-        return results
+        pagesize = app.config['DB_QUERY_LIMIT']
+        count = Todo.query.filter_by(owner=current_user.id).count()
+        results = Todo.query.filter_by(owner=current_user.id).limit(pagesize).all()
+        return_value = {
+            'count' : count,
+            'results' : results,
+            'pagesize' : pagesize
+        }
+        print "return value : %s" % return_value
+        return return_value
