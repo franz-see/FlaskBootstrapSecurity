@@ -41,6 +41,7 @@ Installation
 
             # SQLAlchemy support
             self.SQLALCHEMY_DATABASE_URI = 'sqlite://'
+            self.DB_MAX_PAGE_SIZE = 20
 
             # Configured for Gmail
             DEFAULT_MAIL_SENDER = 'Admin < username@example.com >'
