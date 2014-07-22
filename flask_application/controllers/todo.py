@@ -1,21 +1,16 @@
 #!/usr/bin/env python
 
 from flask import Blueprint 
-from flask.ext.restful import fields, marshal_with, reqparse, Resource
+from flask.ext.restful import fields, marshal_with, Resource
 from flask.ext.security import login_required
 from flask_login import current_user
 from flask_application import app
 from flask_application.controllers import TemplateView
 from flask_application.ext.flask_restful import DateTimeToMillisField, unmarshal_with 
 from flask_application.models import Todo
-from flask_application import utils
 
 todo = Blueprint('todo', __name__, url_prefix='/todo') 
 
-
-parser = reqparse.RequestParser()
-parser.add_argument('p', type=int)
-parser.add_argument('s', type=int)
 
 class TodoView(TemplateView):
     blueprint = todo

@@ -35,7 +35,6 @@ class unmarshal_with(object):
                 arg_options_copy = copy.deepcopy(arg_options)
                 arg_extra_options = {}
                 for candidate in arg_options:
-                    print "Evaluating '%s' : %s" % (candidate, (candidate in _EXTRA_OPTIONS))
                     if candidate in _EXTRA_OPTIONS:
                         arg_extra_options[candidate] = arg_options[candidate]
                         del arg_options_copy[candidate]
