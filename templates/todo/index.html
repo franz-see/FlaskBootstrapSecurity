@@ -15,16 +15,14 @@
 
 
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid" ng-controller="TodoCtrl">
     <div class="row">
         <div class="col-md-7 col-md-offset-1">
-          <h1>Todo</h1>
-          <div ng-controller="TodoListCtrl">
+            <h1>Todo</h1>
             <div class="gridStyle" ng-grid="gridOptions"></div>
-          </div>
         </div>
     </div>
-    <div class="row" ng-controller="TodoModalCtrl">
+    <div class="row">
         <div class="col-md-offset-1 col-md-1">
             <a href="#" class="btn btn-primary btn-large" ng-click="openModal()">Add Todo</a>
         </div>
@@ -67,7 +65,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" ng-click="ok('sm')">OK</button>
+                    <button class="btn btn-primary" ng-click="ok()">OK</button>
                     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
                 </div>
             </div>
@@ -81,7 +79,7 @@
 
 {% block scripts %}
   {{super()}}
-    {% assets filters="rjsmin", output="gen/todo.js", "js/todo/todoApp.js", "js/todo/todoService.js", "js/todo/todoListCtrl.js", "js/todo/todoViewAddModalCtrl.js"%}
+    {% assets filters="rjsmin", output="gen/todo.js", "js/todo/todoApp.js", "js/todo/todoService.js", "js/todo/todoCtrl.js"%}
           <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}
