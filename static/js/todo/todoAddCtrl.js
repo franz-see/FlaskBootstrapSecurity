@@ -1,4 +1,4 @@
-app.controller('TodoAddCtrl', ['$scope', '$modal', '$log', function ($scope, $modal, $log) {
+app.controller('TodoAddCtrl', ['$scope', function ($scope) {
     $scope.dt = new Date();
     $scope.openDatePicker = function ($event) {
         $event.preventDefault();

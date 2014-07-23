@@ -1,18 +1,11 @@
-app.controller('TodoModalCtrl', ['$scope', '$modal', '$log', function ($scope, $modal, $log) {
-    $scope.items = ['item1', 'item2', 'item3'];
-
+app.controller('TodoModalCtrl', ['$scope', '$modal', function ($scope, $modal) {
     $scope.openModal = function (size) {
 
         var modalInstance = $modal.open({
             templateUrl: 'todoAddCtrl.html',
-            controller: function ($scope, $modalInstance, items) {
-                $scope.items = items;
-                $scope.selected = {
-                    item: $scope.items[0]
-                };
-
+            controller: function ($scope, $modalInstance) {
                 $scope.ok = function () {
-                    $modalInstance.close($scope.selected.item);
+                    $modalInstance.close();
                 };
 
                 $scope.cancel = function () {
@@ -21,16 +14,11 @@ app.controller('TodoModalCtrl', ['$scope', '$modal', '$log', function ($scope, $
             },
             size: size,
             resolve: {
-                items: function () {
-                    return $scope.items;
-                }
             }
         });
 
         modalInstance.result.then(function (selectedItem) {
-            $scope.selected = selectedItem;
         }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
         });
     };
 }]);
