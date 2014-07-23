@@ -1,11 +1,17 @@
-app.controller('TodoModalCtrl', ['$scope', '$modal', function ($scope, $modal) {
+app.controller('TodoModalCtrl', ['$scope', '$modal', 'todoService', function ($scope, $modal, Todo) {
     $scope.format = app.dateFormat;
     $scope.openModal = function (size) {
 
         var modalInstance = $modal.open({
             templateUrl: 'todoAddCtrl.html',
             controller: function ($scope, $modalInstance) {
-                $scope.dt = new Date();
+                $scope.todo = new Todo({'date':new Date()});
+
+                $scope.dateOptions = {
+                    formatYear: 'yy',
+                    startingDay: 1
+                };
+
                 $scope.openDatePicker = function ($event) {
                     $event.preventDefault();
                     $event.stopPropagation();
@@ -13,12 +19,8 @@ app.controller('TodoModalCtrl', ['$scope', '$modal', function ($scope, $modal) {
                     $scope.opened = true;
                 };
 
-                $scope.dateOptions = {
-                    formatYear: 'yy',
-                    startingDay: 1
-                };
-
                 $scope.ok = function () {
+                    $scope.todo.$save();
                     $modalInstance.close();
                 };
 
