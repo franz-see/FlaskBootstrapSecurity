@@ -102,4 +102,4 @@ app.register_blueprint(todo_blueprint)
 app.register_blueprint(admin)
 
 from flask_application.controllers.todo import TodoResource
-app.api.add_resource(TodoResource, '/api/todo', '/api/todo/<int:id>')
+app.api.add_resource(TodoResource, '/api/todo', '/api/todo/<int:todo_id>')

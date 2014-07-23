@@ -8,7 +8,7 @@ from flask.ext.security import login_required
 from flask_login import current_user
 from flask_application import app
 from flask_application.controllers import TemplateView
-from flask_application.ext.flask_restful import DateTimeToMillisField, unmarshal_with 
+from flask_application.ext.flask_restful import DateTimeToMillisField, unmarshal_with
 from flask_application.models import Todo
 from dateutil import parser
 from sqlalchemy import and_
@@ -52,25 +52,36 @@ class TodoResource(Resource):
         }
 
     @unmarshal_with({
+        'id' : { 'type' : int },
         'item' : {},
-        'date' : { 'type' : (lambda v,n:parser.parse(v)) }
+        'date' : { 'type' : (lambda v,n:datetime.fromtimestamp(v/1e3)) }
     }, in_object=Todo)
     @marshal_with({
         'id' : fields.Integer,
         'item':fields.String,
         'date':DateTimeToMillisField
     })
-    def post(self, todo):
-        todo.owner = current_user.id
-        app.db.session.add(todo)
-        app.db.session.commit()
-        return todo
+    def post(self, todo_arg):
+        if todo_arg.id:
+            todo_model = self._find_todo(todo_arg.id)
+            todo_model.date = todo_arg.date
+            todo_model.item = todo_arg.item
+        else:
+            todo_model = todo_arg
+            todo_model.owner = current_user.id
+            app.db.session.add(todo_model)
 
-    def delete(self, id):
-        todoToBeDeleted = Todo.query.filter(and_(Todo.id==id, Todo.owner==current_user.id)).first()
+        app.db.session.commit()
+        return todo_model
+
+    def delete(self, todo_id):
+        todoToBeDeleted = self._find_todo(todo_id)
         if not todoToBeDeleted:
             return "fail"
         app.db.session.delete(todoToBeDeleted)
         app.db.session.commit()
         return "success"
 
+    @staticmethod
+    def _find_todo(id):
+        return Todo.query.filter(and_(Todo.id==id, Todo.owner==current_user.id)).first()

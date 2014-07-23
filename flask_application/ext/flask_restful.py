@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import copy
+import datetime
+
 from functools import wraps
 from sets import Set
 
@@ -17,8 +19,7 @@ class DateTimeToMillisField(Raw):
         except AttributeError as ae:
             raise MarshallingException(ae)
 
-
-_EXTRA_OPTIONS = Set(['param_name', 'max']) 
+_EXTRA_OPTIONS = Set(['param_name', 'max'])
 class unmarshal_with(object):
 
     def __init__(self, fields, in_object=None):

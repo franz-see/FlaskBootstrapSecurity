@@ -39,11 +39,11 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
         }
     }, true);
 
-    $scope.openAddModal = function () {
+    $scope.openSaveModal = function (selectedTodo) {
         $modal.open({
             templateUrl: 'todoAddModal.html',
-            controller: function ($scope, $modalInstance, todos) {
-                $scope.todo = new Todo({'date':new Date()});
+            controller: function ($scope, $modalInstance, todos, selectedTodo) {
+                $scope.todo = selectedTodo ? new Todo(selectedTodo) : new Todo({'date':new Date().getTime()});
 
                 $scope.isOpen = true;
 
@@ -62,7 +62,14 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
                 $scope.ok = function () {
                     $scope.todo.$save()
                         .then(function(resp) {
-                            todos.unshift(resp);
+                            var index = todos.indexOf(selectedTodo);
+                            if (~index) {
+                                todos[index].id = resp.id;
+                                todos[index].item = resp.item;
+                                todos[index].date = resp.date;
+                            } else {
+                                todos.unshift(resp);
+                            }
                         });
                     $modalInstance.close();
                 };
@@ -75,6 +82,9 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
             resolve: {
                 todos: function () {
                     return $scope.todos;
+                },
+                selectedTodo: function() {
+                    return selectedTodo;
                 }
             }
         });
@@ -83,7 +93,7 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
     $scope.openDeleteConfirmationModal = function () {
         $modal.open({
             templateUrl: 'todoDeleteConfirmation.html',
-            controller: function ($scope, $modalInstance, hasSelectedTodo, selectedTodo) {
+            controller: function ($scope, $modalInstance, todos, hasSelectedTodo, selectedTodo) {
                 $scope.selectedTodo = selectedTodo;
                 console.log("hasSelectedTodo: " + hasSelectedTodo);
                 console.log("selectedTodo: " + JSON.stringify($scope.selectedTodo));
@@ -93,7 +103,10 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
                         return;
                     }
                     Todo.delete({'id':$scope.selectedTodo.id}, function(resp) {
-                        _getPagedDataAsync();
+                        var index = todos.indexOf(selectedTodo);
+                        if (~index) {
+                            todos.splice(index, 1);
+                        }
                         $modalInstance.close();
                     });
                 };
@@ -104,10 +117,13 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
             },
             size: 'sm',
             resolve: {
-                selectedTodo: $scope.getSelectedTodo,
+                todos: function () {
+                    return $scope.todos;
+                },
                 hasSelectedTodo : function() {
                     return $scope.selectedTodos.length;
-                }
+                },
+                selectedTodo: $scope.getSelectedTodo
             }
         });
     };

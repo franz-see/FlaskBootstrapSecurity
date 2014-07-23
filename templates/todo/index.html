@@ -24,10 +24,13 @@
     </div>
     <div class="row">
         <div class="col-md-offset-1 col-md-1">
-            <a href="#" class="btn btn-primary btn-large" ng-click="openAddModal()">Add Todo</a>
+            <a href="#" class="btn btn-primary btn-large" ng-click="openSaveModal()">Add Todo</a>
         </div>
         <div class="col-md-1">
-            <a href="#" class="btn btn-danger btn-large" ng-class="selectedTodos.length > 0 ? '' : 'disabled'" ng-click="openDeleteConfirmationModal()">Delete Todo</a>
+            <a href="#" class="btn btn-primary btn-large" ng-click="openSaveModal(selectedTodos[0])" ng-class="selectedTodos.length > 0 ? '' : 'disabled'" >Edit Todo</a>
+        </div>
+        <div class="col-md-1">
+            <a href="#" class="btn btn-danger btn-large" ng-click="openDeleteConfirmationModal()" ng-class="selectedTodos.length > 0 ? '' : 'disabled'" >Delete Todo</a>
         </div>
 
         <script type="text/ng-template" id="todoAddModal.html">
