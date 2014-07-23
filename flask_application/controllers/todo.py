@@ -26,6 +26,10 @@ class TodoView(TemplateView):
 
 class TodoListResource(Resource):
 
+    @unmarshal_with({
+        's' : { 'param_name' : 'page_size', 'type' : int, 'default' : app.config['DB_MAX_PAGE_SIZE'], 'max' : app.config['DB_MAX_PAGE_SIZE'] },
+        'p' : { 'param_name' : 'page', 'type' : int, 'default' : 1 }
+    })
     @marshal_with({
         'results':fields.List(fields.Nested({
             'id':fields.Integer,
@@ -35,10 +39,6 @@ class TodoListResource(Resource):
         'page':fields.Integer, 
         'page_size':fields.Integer,
         'total_size':fields.Integer 
-    })
-    @unmarshal_with({
-        's' : { 'param_name' : 'page_size', 'type' : int, 'default' : app.config['DB_MAX_PAGE_SIZE'], 'max' : app.config['DB_MAX_PAGE_SIZE'] },
-        'p' : { 'param_name' : 'page', 'type' : int, 'default' : 1 }
     })
     def get(self, page_size, page):
         total_size = Todo.query.filter_by(owner=current_user.id).count()
