@@ -8,7 +8,7 @@
 
 {% block styles %}
 {{super()}}
-    {% assets filters="cssmin", output="gen/todo.css", "css/todo.css" %}
+    {% assets filters=config.CSS_ASSETS_FILTER, output="gen/todo.css", "css/todo.css" %}
           <link rel="stylesheet" href="{{ ASSET_URL }}"/>
     {% endassets %}
 {% endblock %}
@@ -24,19 +24,19 @@
     </div>
     <div class="row">
         <div class="col-md-offset-1 col-md-1">
-            <a href="#" class="btn btn-primary btn-large" ng-click="openModal()">Add Todo</a>
+            <a href="#" class="btn btn-primary btn-large" ng-click="openAddModal()">Add Todo</a>
         </div>
         <div class="col-md-1">
-            <a href="#" class="btn btn-danger btn-large disabled">Delete Todo(s)</a>
+            <a href="#" class="btn btn-danger btn-large" ng-class="selectedTodos.length > 0 ? '' : 'disabled'" ng-click="openDeleteConfirmationModal()">Delete Todo</a>
         </div>
 
-        <script type="text/ng-template" id="todoAddCtrl.html">
+        <script type="text/ng-template" id="todoAddModal.html">
             <div>
                 <div class="modal-header">
                     <h3 class="modal-title">Add New Todo</h3>
                 </div>
                 <div class="modal-body">
-                    <form action="/api/todo" method="PUT" name="add_new_todo" class="ng-pristine ng-valid form-horizontal">
+                    <form name="add_new_todo" class="ng-pristine ng-valid form-horizontal">
                         <div class="form-group ">
                             <label class="control-label col-sm-2" for="item">Item</label>
 
@@ -50,7 +50,7 @@
                             <div class="col-sm-10">
                                 <p class="input-group">
                                     <input type="text" class="form-control"
-                                           datepicker-popup="{{ '{{format}}' }}" ng-model="todo.date"
+                                           datepicker-popup="{{ '{{DATE_FORMAT}}' }}" ng-model="todo.date"
                                            is-open="opened"
                                            datepicker-options="dateOptions"
                                            ng-required="true" close-text="Close"/>
@@ -70,6 +70,21 @@
                 </div>
             </div>
         </script>
+
+        <script type="text/ng-template" id="todoDeleteConfirmation.html">
+            <div>
+                <div class="modal-header">
+                    <h3 class="modal-title">Delete Todo?</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete "{{ '{{selectedTodo.item}}' }}" ({{ '{{selectedTodo.date | date:DATE_FORMAT}}' }}) ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" ng-click="ok()">Delete</button>
+                    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </script>
     </div>
 </div>
 
@@ -79,7 +94,7 @@
 
 {% block scripts %}
   {{super()}}
-    {% assets filters="rjsmin", output="gen/todo.js", "js/todo/todoApp.js", "js/todo/todoService.js", "js/todo/todoCtrl.js", "js/directive/xng-focus.js" %}
+    {% assets filters=config.JS_ASSETS_FILTER, output="gen/todo.js", "js/todo/todoApp.js", "js/todo/todoService.js", "js/todo/todoCtrl.js", "js/directive/xng-focus.js" %}
           <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}

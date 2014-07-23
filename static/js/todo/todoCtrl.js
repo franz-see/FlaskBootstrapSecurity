@@ -1,8 +1,9 @@
 app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, $modal, Todo) {
+    $scope.DATE_FORMAT = app.dateFormat;
+
     $scope.todos = [];
     $scope.totalServerItems = 0;
-
-    $scope.format = app.dateFormat;
+    $scope.selectedTodos = [];
 
     $scope.filterOptions = {
         filterText: "",
@@ -15,6 +16,8 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
     };
     $scope.gridOptions = {
         data: 'todos',
+        multiSelect: false,
+        selectedItems: $scope.selectedTodos,
         enablePaging: true,
         showFooter: true,
         totalServerItems:'totalServerItems',
@@ -25,38 +28,20 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
         ]
     };
 
-    $scope.getPagedDataAsync = function () {
-        setTimeout(function () {
-            var queryParams = {
-                's' : $scope.pagingOptions.pageSize,
-                'p' : $scope.pagingOptions.currentPage
-            };
-            Todo.query(queryParams, function(value) {
-                $scope.todos = value['results'];
-                $scope.totalServerItems = value['total_size'];
-                if (!$scope.$$phase) {
-                    $scope.$apply();
-                }
-            });
-        }, 100);
-    };
-
-    $scope.getPagedDataAsync();
-
     $scope.$watch('pagingOptions', function (newVal, oldVal) {
         if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
-          $scope.getPagedDataAsync();
+          _getPagedDataAsync();
         }
     }, true);
     $scope.$watch('filterOptions', function (newVal, oldVal) {
         if (newVal !== oldVal) {
-          $scope.getPagedDataAsync();
+          _getPagedDataAsync();
         }
     }, true);
 
-    $scope.openModal = function () {
+    $scope.openAddModal = function () {
         $modal.open({
-            templateUrl: 'todoAddCtrl.html',
+            templateUrl: 'todoAddModal.html',
             controller: function ($scope, $modalInstance, todos) {
                 $scope.todo = new Todo({'date':new Date()});
 
@@ -94,6 +79,60 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
             }
         });
     };
+
+    $scope.openDeleteConfirmationModal = function () {
+        $modal.open({
+            templateUrl: 'todoDeleteConfirmation.html',
+            controller: function ($scope, $modalInstance, hasSelectedTodo, selectedTodo) {
+                $scope.selectedTodo = selectedTodo;
+                console.log("hasSelectedTodo: " + hasSelectedTodo);
+                console.log("selectedTodo: " + JSON.stringify($scope.selectedTodo));
+
+                $scope.ok = function () {
+                    if (!hasSelectedTodo) {
+                        return;
+                    }
+                    Todo.delete({'id':$scope.selectedTodo.id}, function(resp) {
+                        _getPagedDataAsync();
+                        $modalInstance.close();
+                    });
+                };
+
+                $scope.cancel = function () {
+                    $modalInstance.dismiss('cancel');
+                };
+            },
+            size: 'sm',
+            resolve: {
+                selectedTodo: $scope.getSelectedTodo,
+                hasSelectedTodo : function() {
+                    return $scope.selectedTodos.length;
+                }
+            }
+        });
+    };
+
+    $scope.getSelectedTodo = function() {
+        return $scope.selectedTodos.length ? $scope.selectedTodos[0] : {};
+    };
+
+    var _getPagedDataAsync = function () {
+        setTimeout(function () {
+            var queryParams = {
+                's' : $scope.pagingOptions.pageSize,
+                'p' : $scope.pagingOptions.currentPage
+            };
+            Todo.query(queryParams, function(value) {
+                $scope.todos = value['results'];
+                $scope.totalServerItems = value['total_size'];
+                if (!$scope.$$phase) {
+                    $scope.$apply();
+                }
+            });
+        }, 100);
+    };
+
+    _getPagedDataAsync();
 
 }]);
 

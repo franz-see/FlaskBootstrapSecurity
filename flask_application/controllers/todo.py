@@ -11,6 +11,7 @@ from flask_application.controllers import TemplateView
 from flask_application.ext.flask_restful import DateTimeToMillisField, unmarshal_with 
 from flask_application.models import Todo
 from dateutil import parser
+from sqlalchemy import and_
 
 todo_blueprint = Blueprint('todo', __name__, url_prefix='/todo')
 
@@ -24,7 +25,7 @@ class TodoView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         return {}
 
-class TodoListResource(Resource):
+class TodoResource(Resource):
 
     @unmarshal_with({
         's' : { 'param_name' : 'page_size', 'type' : int, 'default' : app.config['DB_MAX_PAGE_SIZE'], 'max' : app.config['DB_MAX_PAGE_SIZE'] },
@@ -64,4 +65,12 @@ class TodoListResource(Resource):
         app.db.session.add(todo)
         app.db.session.commit()
         return todo
+
+    def delete(self, id):
+        todoToBeDeleted = Todo.query.filter(and_(Todo.id==id, Todo.owner==current_user.id)).first()
+        if not todoToBeDeleted:
+            return "fail"
+        app.db.session.delete(todoToBeDeleted)
+        app.db.session.commit()
+        return "success"
 

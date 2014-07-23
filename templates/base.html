@@ -4,7 +4,7 @@
 
 {% block styles %}
 {{super()}}
-    {% assets filters="cssmin", output="gen/packed.css", "css/site.css", "css/ng-grid.min.css" %}
+    {% assets filters=config.CSS_ASSETS_FILTER, output="gen/packed.css", "css/site.css", "css/ng-grid-2.0.11.css" %}
           <link rel="stylesheet" href="{{ ASSET_URL }}"/>
     {% endassets %}
 {% endblock %}
@@ -52,7 +52,7 @@
 
 {% block scripts %}
   {{super()}}
-    {% assets filters="rjsmin", output="gen/packed.js", "js/angular-1.2.20.min.js", "js/angular-resource-1.2.20.min.js", "js/ui-bootstrap-tpls-0.11.0.js", "js/ng-grid-2.0.11.min.js" %}
+    {% assets filters=config.JS_ASSETS_FILTER, output="gen/packed.js", "js/angular-1.2.20.js", "js/angular-resource-1.2.20.js", "js/ui-bootstrap-tpls-0.11.0.js", "js/ng-grid-2.0.11.js" %}
           <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}

@@ -101,5 +101,5 @@ from flask_application.controllers.todo import todo_blueprint
 app.register_blueprint(todo_blueprint)
 app.register_blueprint(admin)
 
-from flask_application.controllers.todo import TodoListResource
-app.api.add_resource(TodoListResource, '/api/todo')
+from flask_application.controllers.todo import TodoResource
+app.api.add_resource(TodoResource, '/api/todo', '/api/todo/<int:id>')
