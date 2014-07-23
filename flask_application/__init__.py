@@ -94,12 +94,12 @@ app.register_blueprint(admin)
 
 # REST
 from flask.ext.restful import Api
-api = Api(app)
+app.api = Api(app)
 
 # TODO
-from flask_application.controllers.todo import todo
-app.register_blueprint(todo)
+from flask_application.controllers.todo import todo_blueprint
+app.register_blueprint(todo_blueprint)
 app.register_blueprint(admin)
 
 from flask_application.controllers.todo import TodoListResource
-api.add_resource(TodoListResource, '/api/todo/')
+app.api.add_resource(TodoListResource, '/api/todo')
