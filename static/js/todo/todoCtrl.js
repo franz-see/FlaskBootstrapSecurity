@@ -60,6 +60,8 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
             controller: function ($scope, $modalInstance, todos) {
                 $scope.todo = new Todo({'date':new Date()});
 
+                $scope.isOpen = true;
+
                 $scope.dateOptions = {
                     formatYear: 'yy',
                     startingDay: 1
