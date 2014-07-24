@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
 import copy
-import datetime
-
 from functools import wraps
 from sets import Set
 
 from flask.ext.restful import reqparse
 from flask.ext.restful.fields import MarshallingException, Raw
+
 from flask_application import utils
 
 class DateTimeToMillisField(Raw):
@@ -16,6 +15,19 @@ class DateTimeToMillisField(Raw):
     def format(self, value):
         try:
             return utils.datetime_to_millis(value)
+        except AttributeError as ae:
+            raise MarshallingException(ae)
+
+class DateTimeToFormattedString(Raw):
+    """Return the millis given the datetime"""
+
+    def __init__(self, date_format, **kwargs):
+        super(DateTimeToFormattedString, self).__init__(**kwargs)
+        self.date_format = date_format
+
+    def format(self, value):
+        try:
+            return value.strftime(self.date_format)
         except AttributeError as ae:
             raise MarshallingException(ae)
 

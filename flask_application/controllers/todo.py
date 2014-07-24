@@ -6,12 +6,12 @@ from flask import Blueprint
 from flask.ext.restful import fields, marshal_with, Resource
 from flask.ext.security import login_required
 from flask_login import current_user
+from sqlalchemy import and_
+
 from flask_application import app
 from flask_application.controllers import TemplateView
-from flask_application.ext.flask_restful import DateTimeToMillisField, unmarshal_with
+from flask_application.ext.flask_restful import DateTimeToFormattedString, unmarshal_with
 from flask_application.models import Todo
-from dateutil import parser
-from sqlalchemy import and_
 
 todo_blueprint = Blueprint('todo', __name__, url_prefix='/todo')
 
@@ -35,7 +35,7 @@ class TodoResource(Resource):
         'results':fields.List(fields.Nested({
             'id':fields.Integer,
             'item':fields.String, 
-            'date':DateTimeToMillisField
+            'date':DateTimeToFormattedString('%B %d, %Y')
         })),
         'page':fields.Integer, 
         'page_size':fields.Integer,
@@ -59,7 +59,7 @@ class TodoResource(Resource):
     @marshal_with({
         'id' : fields.Integer,
         'item':fields.String,
-        'date':DateTimeToMillisField
+        'date':DateTimeToFormattedString('%B %d, %Y')
     })
     def post(self, todo_arg):
         if todo_arg.id:
