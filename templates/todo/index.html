@@ -97,7 +97,7 @@
 
 {% block scripts %}
   {{super()}}
-    {% assets filters=config.JS_ASSETS_FILTER, output="gen/todo.js", "js/todo/todoApp.js", "js/todo/todoService.js", "js/todo/todoCtrl.js", "js/directive/xng-focus.js" %}
+    {% assets filters=config.JS_ASSETS_FILTER, output="gen/todo.js", "js/todo/todoApp.js", "js/todo/todoService.js", "js/todo/todoCtrl.js", "js/directive/xng-focus.js", "js/date-1.0-Alpha-1.js" %}
           <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}

@@ -15,6 +15,7 @@ from flask_application.models import Todo
 
 todo_blueprint = Blueprint('todo', __name__, url_prefix='/todo')
 
+DATE_FORMAT = '%B %d, %Y'
 
 class TodoView(TemplateView):
     blueprint = todo_blueprint
@@ -35,7 +36,7 @@ class TodoResource(Resource):
         'results':fields.List(fields.Nested({
             'id':fields.Integer,
             'item':fields.String, 
-            'date':DateTimeToFormattedString('%B %d, %Y')
+            'date':DateTimeToFormattedString(DATE_FORMAT)
         })),
         'page':fields.Integer, 
         'page_size':fields.Integer,
@@ -54,12 +55,12 @@ class TodoResource(Resource):
     @unmarshal_with({
         'id' : { 'type' : int },
         'item' : {},
-        'date' : { 'type' : (lambda v,n:datetime.fromtimestamp(v/1e3)) }
+        'date' : { 'type' : (lambda v,n:datetime.strptime(v, DATE_FORMAT)) }
     }, in_object=Todo)
     @marshal_with({
         'id' : fields.Integer,
         'item':fields.String,
-        'date':DateTimeToFormattedString('%B %d, %Y')
+        'date':DateTimeToFormattedString(DATE_FORMAT)
     })
     def post(self, todo_arg):
         if todo_arg.id:

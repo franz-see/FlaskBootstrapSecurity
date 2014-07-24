@@ -1,5 +1,5 @@
-app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, $modal, Todo) {
-    $scope.DATE_FORMAT = app.dateFormat;
+app.controller('TodoCtrl', ['$scope', '$modal', '$filter', 'todoService', function($scope, $modal, $filter, Todo) {
+    $scope.DATE_FORMAT = app.DATE_FORMAT;
 
     $scope.todos = [];
     $scope.totalServerItems = 0;
@@ -24,7 +24,7 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
         pagingOptions: $scope.pagingOptions,
         filterOptions: $scope.filterOptions,
         columnDefs: [{ field: 'item', displayName: 'Item', width: '80%' },
-                     { field: 'date', displayName: 'Date', width: '20%', cellFilter: "date:'" + app.dateFormat + "'", cellClass : 'rightAlign' }
+                     { field: 'date', displayName: 'Date', width: '20%', cellFilter: "date:'" + $scope.DATE_FORMAT + "'", cellClass : 'rightAlign' }
         ]
     };
 
@@ -42,8 +42,9 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
     $scope.openSaveModal = function (selectedTodo) {
         $modal.open({
             templateUrl: 'todoAddModal.html',
-            controller: function ($scope, $modalInstance, todos, selectedTodo) {
-                $scope.todo = selectedTodo ? new Todo(selectedTodo) : new Todo({'date':new Date().getTime()});
+            controller: function ($scope, $modalInstance, todos, selectedTodo, DATE_FORMAT) {
+                $scope.DATE_FORMAT = DATE_FORMAT;
+                $scope.todo = selectedTodo ? new Todo(selectedTodo) : new Todo({'date':new Date()});
 
                 $scope.isOpen = true;
 
@@ -85,6 +86,9 @@ app.controller('TodoCtrl', ['$scope', '$modal', 'todoService', function($scope, 
                 },
                 selectedTodo: function() {
                     return selectedTodo;
+                },
+                DATE_FORMAT : function() {
+                    return $scope.DATE_FORMAT;
                 }
             }
         });
