@@ -45,6 +45,9 @@ class Config(object):
         # CACHE
         self.CACHE_TYPE = 'simple'
 
+        self.CSS_ASSETS_FILTER = None
+        self.JS_ASSETS_FILTER = None
+
 class ProductionConfig(Config):
     def __init__(self):
         super(ProductionConfig, self).__init__()
@@ -59,6 +62,9 @@ class ProductionConfig(Config):
         self.MAIL_USE_SSL = True
         self.MAIL_USERNAME = os.getenv('MANDRILL_USERNAME')
         self.MAIL_PASSWORD = os.getenv('MANDRILL_APIKEY')
+
+        self.CSS_ASSETS_FILTER = "cssmin"
+        self.JS_ASSETS_FILTER = "rjsmin"
 
 
 class TestConfig(Config):
