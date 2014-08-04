@@ -103,3 +103,6 @@ app.register_blueprint(admin)
 
 from flask_application.controllers.todo import TodoResource
 app.api.add_resource(TodoResource, '/api/todo', '/api/todo/<int:todo_id>')
+
+from werkzeug.contrib.fixers import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app)

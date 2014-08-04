@@ -86,10 +86,18 @@ class DevelopmentConfig(Config):
         self.DEBUG = True
         self.TESTING = False
 
+class DevGunicornConfig(Config):
+    def __init__(self):
+        super(DevGunicornConfig, self).__init__()
+        self.ENVIRONMENT = 'DevGunicorn'
+        self.SERVER_NAME = 'localhost:8000'
+
 
 if os.getenv('TEST') == 'yes':
     app_config = TestConfig()
 elif os.getenv('PRODUCTION') == 'yes':
     app_config = ProductionConfig()
+elif os.getenv('DEVGUNICORN') == 'yes':
+    app_config = DevGunicornConfig()
 else:
     app_config = DevelopmentConfig()
