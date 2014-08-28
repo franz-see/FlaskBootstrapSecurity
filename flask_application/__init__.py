@@ -3,106 +3,112 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask import Flask
+from extensions import cache, db, mail, security
 
 FLASK_APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
-app = Flask(
-    __name__,
-    template_folder=os.path.join(FLASK_APP_DIR, '..', 'templates'),
-    static_folder=os.path.join(FLASK_APP_DIR, '..', 'static')
-)
-
-#  Config
-app.config.from_object('flask_application.config.app_config')
-app.logger.info("Config: %s" % app.config['ENVIRONMENT'])
-
-#  Logging
-import logging
-logging.basicConfig(
-    level=app.config['LOG_LEVEL'],
-    format='%(asctime)s %(levelname)s: %(message)s '
-           '[in %(pathname)s:%(lineno)d]',
-    datefmt='%Y%m%d-%H:%M%p',
-)
-
-#  Email on errors
-if not app.debug and not app.testing:
-    import logging.handlers
-    mail_handler = logging.handlers.SMTPHandler(
-        'localhost',
-        os.getenv('USER'),
-        app.config['SYS_ADMINS'],
-        '{0} error'.format(app.config['SITE_NAME']),
+def create_app():
+    app = Flask(
+        __name__,
+        template_folder=os.path.join(FLASK_APP_DIR, '..', 'templates'),
+        static_folder=os.path.join(FLASK_APP_DIR, '..', 'static')
     )
-    mail_handler.setFormatter(logging.Formatter('''
-        Message type:       %(levelname)s
-        Location:           %(pathname)s:%(lineno)d
-        Module:             %(module)s
-        Function:           %(funcName)s
-        Time:               %(asctime)s
 
-        Message:
+    #  Config
+    app.config.from_object('flask_application.config.app_config')
+    app.logger.info("Config: %s" % app.config['ENVIRONMENT'])
 
-        %(message)s
-    '''.strip()))
-    mail_handler.setLevel(logging.ERROR)
-    app.logger.addHandler(mail_handler)
-    app.logger.info("Emailing on error is ENABLED")
-else:
-    app.logger.info("Emailing on error is DISABLED")
+    #  Logging
+    import logging
+    logging.basicConfig(
+        level=app.config['LOG_LEVEL'],
+        format='%(asctime)s %(levelname)s: %(message)s '
+               '[in %(pathname)s:%(lineno)d]',
+        datefmt='%Y%m%d-%H:%M%p',
+    )
 
-# Bootstrap
-from flask_bootstrap import Bootstrap
-Bootstrap(app)
+    #  Email on errors
+    if not app.debug and not app.testing:
+        import logging.handlers
+        mail_handler = logging.handlers.SMTPHandler(
+            'localhost',
+            os.getenv('USER'),
+            app.config['SYS_ADMINS'],
+            '{0} error'.format(app.config['SITE_NAME']),
+        )
+        mail_handler.setFormatter(logging.Formatter('''
+            Message type:       %(levelname)s
+            Location:           %(pathname)s:%(lineno)d
+            Module:             %(module)s
+            Function:           %(funcName)s
+            Time:               %(asctime)s
 
-# Assets
-from flask.ext.assets import Environment
-assets = Environment(app)
-# Ensure output directory exists
-assets_output_dir = os.path.join(FLASK_APP_DIR, '..', 'static', 'gen')
-if not os.path.exists(assets_output_dir):
-    os.mkdir(assets_output_dir)
+            Message:
 
-# Email
-from flask.ext.mail import Mail
-mail = Mail(app)
+            %(message)s
+        '''.strip()))
+        mail_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_handler)
+        app.logger.info("Emailing on error is ENABLED")
+    else:
+        app.logger.info("Emailing on error is DISABLED")
 
-# Memcache
-from flask.ext.cache import Cache
-app.cache = Cache(app)
+    # Bootstrap
+    from flask_bootstrap import Bootstrap
+    Bootstrap(app)
 
-# Business Logic
-# http://flask.pocoo.org/docs/patterns/packages/
-# http://flask.pocoo.org/docs/blueprints/
-from flask_application.controllers.frontend import frontend
-app.register_blueprint(frontend)
+    # Assets
+    from flask.ext.assets import Environment
+    assets = Environment(app)
+    # Ensure output directory exists
+    assets_output_dir = os.path.join(FLASK_APP_DIR, '..', 'static', 'gen')
+    if not os.path.exists(assets_output_dir):
+        os.mkdir(assets_output_dir)
 
-# SQLAlchemy 
-from flask.ext.sqlalchemy import SQLAlchemy
-app.db = SQLAlchemy(app)
+    # Email
+    mail.init_app(app)
+    app.mail = mail
 
-from flask.ext.security import Security,SQLAlchemyUserDatastore 
-from flask_application.models import User, Role
+    # Memcache
+    cache.init_app(app)
+    app.cache = cache
 
-# Setup Flask-Security
-user_datastore = SQLAlchemyUserDatastore(app.db, User, Role)
-app.security = Security(app, user_datastore)
+    # Business Logic
+    # http://flask.pocoo.org/docs/patterns/packages/
+    # http://flask.pocoo.org/docs/blueprints/
+    from flask_application.controllers.frontend import frontend
+    app.register_blueprint(frontend)
 
-from flask_application.controllers.admin import admin
-app.register_blueprint(admin)
+    # SQLAlchemy
+    db.init_app(app)
+    app.db = db
 
-# REST
-from flask.ext.restful import Api
-app.api = Api(app)
+    from flask.ext.security import SQLAlchemyUserDatastore
+    from flask_application.models import User, Role
 
-# TODO
-from flask_application.controllers.todo import todo_blueprint
-app.register_blueprint(todo_blueprint)
-app.register_blueprint(admin)
+    # Setup Flask-Security
+    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+    app.user_datastore = user_datastore
 
-from flask_application.controllers.todo import TodoResource
-app.api.add_resource(TodoResource, '/api/todo', '/api/todo/<int:todo_id>')
+    security.init_app(app=app, datastore=user_datastore)
+    app.security = security
 
-from werkzeug.contrib.fixers import ProxyFix
-app.wsgi_app = ProxyFix(app.wsgi_app)
+
+    from flask_application.controllers.admin import admin
+    app.register_blueprint(admin)
+
+    # REST
+    from flask.ext.restful import Api
+    app.api = Api(app)
+
+    # TODO
+    from flask_application.controllers.todo import todo_blueprint
+    app.register_blueprint(todo_blueprint)
+
+    from flask_application.controllers.todo import TodoResource
+    app.api.add_resource(TodoResource, '/api/todo', '/api/todo/<int:todo_id>')
+
+    from werkzeug.contrib.fixers import ProxyFix
+    app.wsgi_app = ProxyFix(app.wsgi_app)
+
+    return app

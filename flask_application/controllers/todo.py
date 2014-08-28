@@ -2,13 +2,12 @@
 
 from datetime import datetime
 
-from flask import Blueprint
+from flask import current_app, Blueprint
 from flask.ext.restful import fields, marshal_with, Resource
 from flask.ext.security import login_required
 from flask_login import current_user
 from sqlalchemy import and_
 
-from flask_application import app
 from flask_application.controllers import TemplateView
 from flask_application.ext.flask_restful import DateTimeToFormattedString, unmarshal_with
 from flask_application.models import Todo
@@ -16,6 +15,7 @@ from flask_application.models import Todo
 todo_blueprint = Blueprint('todo', __name__, url_prefix='/todo')
 
 DATE_FORMAT = '%B %d, %Y'
+_DB_MAX_PAGE_SIZE = 20
 
 class TodoView(TemplateView):
     blueprint = todo_blueprint
@@ -29,7 +29,7 @@ class TodoView(TemplateView):
 class TodoResource(Resource):
 
     @unmarshal_with({
-        's' : { 'param_name' : 'page_size', 'type' : int, 'default' : app.config['DB_MAX_PAGE_SIZE'], 'max' : app.config['DB_MAX_PAGE_SIZE'] },
+        's' : { 'param_name' : 'page_size', 'type' : int, 'default' : _DB_MAX_PAGE_SIZE, 'max' : _DB_MAX_PAGE_SIZE },
         'p' : { 'param_name' : 'page', 'type' : int, 'default' : 1 }
     })
     @marshal_with({
@@ -70,17 +70,17 @@ class TodoResource(Resource):
         else:
             todo_model = todo_arg
             todo_model.owner = current_user.id
-            app.db.session.add(todo_model)
+            current_app.db.session.add(todo_model)
 
-        app.db.session.commit()
+        current_app.db.session.commit()
         return todo_model
 
     def delete(self, todo_id):
         todoToBeDeleted = self._find_todo(todo_id)
         if not todoToBeDeleted:
             return "fail"
-        app.db.session.delete(todoToBeDeleted)
-        app.db.session.commit()
+        current_app.db.session.delete(todoToBeDeleted)
+        current_app.db.session.commit()
         return "success"
 
     @staticmethod

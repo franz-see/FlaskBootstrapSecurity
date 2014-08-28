@@ -1,14 +1,21 @@
 from flask.ext.script import Command
 from flask_application.populate import populate_data
-from flask_application import app
 
 class ResetDB(Command):
     """Drops all tables and recreates them"""
+
+    def __init__(self, app):
+        self.app = app
+
     def run(self, **kwargs):
-        app.db.drop_all()
-        app.db.create_all()
+        self.app.db.drop_all()
+        self.app.db.create_all()
 
 class PopulateDB(Command):
     """Fills in predefined data into DB"""
+
+    def __init__(self, app):
+        self.app = app
+
     def run(self, **kwargs):
-        populate_data()
+        populate_data(self.app)
