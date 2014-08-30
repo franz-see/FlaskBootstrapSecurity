@@ -7,7 +7,7 @@ from extensions import cache, db, mail, security
 
 FLASK_APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def create_app():
+def create_app(config=None):
     app = Flask(
         __name__,
         template_folder=os.path.join(FLASK_APP_DIR, '..', 'templates'),
@@ -15,7 +15,10 @@ def create_app():
     )
 
     #  Config
-    app.config.from_object('flask_application.config.app_config')
+    if config:
+        app.config.from_object(config)
+    else:
+        app.config.from_object('flask_application.config.app_config')
     app.logger.info("Config: %s" % app.config['ENVIRONMENT'])
 
     #  Logging
