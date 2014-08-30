@@ -73,7 +73,7 @@ class TestConfig(Config):
         self.ENVIRONMENT = 'Test'
         self.DEBUG = False
         self.TESTING = True
-
+        self.SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
 class DevelopmentConfig(Config):
     '''

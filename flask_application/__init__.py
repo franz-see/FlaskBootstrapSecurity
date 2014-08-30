@@ -15,10 +15,8 @@ def create_app(config=None):
     )
 
     #  Config
-    if config:
-        app.config.from_object(config)
-    else:
-        app.config.from_object('flask_application.config.app_config')
+    effective_config = config or 'flask_application.config.app_config'
+    app.config.from_object(effective_config)
     app.logger.info("Config: %s" % app.config['ENVIRONMENT'])
 
     #  Logging

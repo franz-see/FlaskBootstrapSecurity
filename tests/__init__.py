@@ -5,4 +5,11 @@ from flask_application.config import TestConfig
 class BaseTestCase(TestCase):
 
     def create_app(self):
-        return create_app(config=TestConfig())
+        self.app = create_app(config=TestConfig())
+        return self.app
+
+    def setUp(self):
+        self.app.db.create_all()
+
+    def tearDown(self):
+        self.app.db.drop_all()
