@@ -74,6 +74,7 @@ class TestConfig(Config):
         self.ENVIRONMENT = 'Test'
         self.DEBUG = False
         self.TESTING = True
+        self.SERVER_NAME = 'localhost:5001'
         self.SQLALCHEMY_DATABASE_URI = 'sqlite://'
         self.SETUP_DB = False
 
