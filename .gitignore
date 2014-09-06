@@ -5,4 +5,11 @@
 .idea
 flask_application/config.py
 static/.webassets-cache
-static/gen/
+static/gen
+log.html
+output.xml
+report.html
+*/log.html
+*/output.xml
+*/report.html
+selenium-screenshot-*.png

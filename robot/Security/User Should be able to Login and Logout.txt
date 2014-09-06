@@ -1,7 +1,7 @@
 *** Settings ***
 Test Teardown     Logout if Possible
 Resource          Resources/Common_Library.txt
-Resource          Login_Logout_Resource.txt
+Resource          Security_Resource.txt
 Resource          Resources/Common.txt
 
 *** Test Cases ***

@@ -26,4 +26,7 @@ Suite Teardown
     Close All Browsers
 
 Logout if Possible
-    Run Keyword And Ignore Error    Click Link    Logout
+    Run Keyword And Ignore Error    Logout
+
+Logout
+    Click Link    Logout
