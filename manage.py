@@ -11,6 +11,7 @@ app = create_app()
 
 manager = Manager(app)
 manager.add_command("runserver", Server())
+manager.add_command("testserver", Server(host='localhost', port=5001))
 
 manager.add_command("reset_db", ResetDB(app))
 manager.add_command("populate_db", PopulateDB(app))

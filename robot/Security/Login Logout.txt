@@ -1,0 +1,12 @@
+*** Settings ***
+Resource          Resources/Common_Library.txt
+Resource          Login_Logout_Resource.txt
+Resource          Resources/Common.txt
+
+*** Test Cases ***
+User Should be able to Login
+    Given    User is in Login Page
+    Given    User Inputs Correct Username
+    Given    User Inputs Correct Password
+    When    User Logins In
+    Then    User Should Be Logged In

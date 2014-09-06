@@ -10,11 +10,11 @@ def create_roles(app):
 
 
 def create_users(app):
-    for u in (('matt', 'matt@lp.com', 'password', ['admin'], True),
-              ('jill', 'jill@lp.com', 'password', ['author'], True),
-              ('tiya', 'tiya@lp.com', 'password', [], False)): 
-        app.user_datastore.create_user(email=u[1], password=encrypt_password(u[2]),
-                                   roles=u[3], active=u[4], confirmed_at=datetime.datetime.now()
+    for u in (('matt@lp.com', 'password', ['admin'], True),
+              ('jill@lp.com', 'password', ['author'], True),
+              ('tiya@lp.com', 'password', [], False)): 
+        app.user_datastore.create_user(email=u[0], password=encrypt_password(u[1]),
+                                   roles=u[2], active=u[3], confirmed_at=datetime.datetime.now()
                                   )
         app.user_datastore.commit()
 

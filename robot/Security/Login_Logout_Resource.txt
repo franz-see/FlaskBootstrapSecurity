@@ -1,0 +1,20 @@
+*** Settings ***
+Resource          Resources/Common_Library.txt
+
+*** Keywords ***
+User is in Login Page
+    Go To    ${BASE_URL}
+    Wait Until Page Contains    Login
+    Click Link    Login
+
+User Inputs Correct Username
+    Input Text    email    matt@lp.com
+
+User Inputs Correct Password
+    Input Text    password    password
+
+User Logins In
+    Click Button    Login
+
+User Should Be Logged In
+    Page Should Contain    Logout

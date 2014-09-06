@@ -1,0 +1,21 @@
+*** Settings ***
+Resource          Common_Library.txt
+
+*** Variables ***
+${BASE_URL}       http://localhost:5001/
+
+*** Keywords ***
+Suite SetUp
+    Open Browser    ${BASE_URL}
+
+Given
+    [Arguments]    @{args}
+    Run Keyword    @{args}
+
+When
+    [Arguments]    @{args}
+    Run Keyword    @{args}
+
+Then
+    [Arguments]    @{args}
+    Run Keyword    @{args}

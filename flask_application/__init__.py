@@ -7,9 +7,10 @@ from extensions import cache, db, mail, security
 
 FLASK_APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def create_app(config=None):
+def create_app(name=None, config=None):
+    effective_name = name if name else __name__
     app = Flask(
-        __name__,
+        effective_name,
         template_folder=os.path.join(FLASK_APP_DIR, '..', 'templates'),
         static_folder=os.path.join(FLASK_APP_DIR, '..', 'static')
     )
@@ -60,7 +61,7 @@ def create_app(config=None):
 
     # Assets
     from flask.ext.assets import Environment
-    assets = Environment(app)
+    app.assets = Environment(app)
     # Ensure output directory exists
     assets_output_dir = os.path.join(FLASK_APP_DIR, '..', 'static', 'gen')
     if not os.path.exists(assets_output_dir):
@@ -111,5 +112,13 @@ def create_app(config=None):
 
     from werkzeug.contrib.fixers import ProxyFix
     app.wsgi_app = ProxyFix(app.wsgi_app)
+
+    if app.config['SETUP_DB']:
+        with app.app_context():
+            app.db.drop_all()
+            app.db.create_all()
+
+            from flask_application.populate import populate_data
+            populate_data(app)
 
     return app

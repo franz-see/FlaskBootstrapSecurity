@@ -19,6 +19,7 @@ class Config(object):
         # SQLAlchemy support
         self.SQLALCHEMY_DATABASE_URI = 'sqlite://'
         self.DB_MAX_PAGE_SIZE = 20
+        self.SETUP_DB = False
 
         # Configured for Gmail
         self.DEFAULT_MAIL_SENDER = 'Admin < username@example.com >'
@@ -74,6 +75,7 @@ class TestConfig(Config):
         self.DEBUG = False
         self.TESTING = True
         self.SQLALCHEMY_DATABASE_URI = 'sqlite://'
+        self.SETUP_DB = False
 
 class DevelopmentConfig(Config):
     '''

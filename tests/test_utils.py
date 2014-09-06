@@ -1,9 +1,9 @@
 from flask_application import utils 
 
 import datetime
-from tests import BaseTestCase
+from tests import UnitTestCase 
 
-class TestDatetimeToMillis(BaseTestCase):
+class TestDatetimeToMillis(UnitTestCase):
     
     def test_should_return_millis_of_datetime(self):
         datetime_value = datetime.datetime(2014, 8, 30, 14, 5, 47, 880026)
@@ -41,7 +41,7 @@ class _Given_MaxValue_WhenGet:
         actual_value = utils.get({'key':100}, 'key', max_value=100)
         self.assertEquals(actual_value, 100)
 
-class TestGet(BaseTestCase, _Given_ValueIsNone_When_Get, _Given_MaxValue_WhenGet):
+class TestGet(UnitTestCase, _Given_ValueIsNone_When_Get, _Given_MaxValue_WhenGet):
 
     def test_should_get_value_from_dict(self):
         actual_value = utils.get({'dummy key':'dummy value'}, 'dummy key')
