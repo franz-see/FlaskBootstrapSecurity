@@ -14,10 +14,22 @@ Incorrect Username
     Given    User is in Login Page
     When    User Logs In With    ${INCORRECT_USERNAME}    ${CORRECT_PASSWORD}
     Then    User Should NOT Be Logged In
-    Then    Page Should Contain    Specified user does not exist
+    Then    Page Should Contain    Incorrect Username or Password
 
 Incorrect Password
     Given    User is in Login Page
     When    User Logs In With    ${CORRECT_USERNAME}    ${INCORRECT_PASSWORD}
     Then    User Should NOT Be Logged In
-    Then    Page Should Contain    Invalid password
+    Then    Page Should Contain    Incorrect Username or Password
+
+No Username
+    Given    User is in Login Page
+    When    User Logs In With    ${EMPTY}    ${CORRECT_PASSWORD}
+    Then    User Should NOT Be Logged In
+    Then    Page Should Contain    Email not provided
+
+No Password
+    Given    User is in Login Page
+    When    User Logs In With    ${CORRECT_USERNAME}    ${EMPTY}
+    Then    User Should NOT Be Logged In
+    Then    Page Should Contain    Password not provided

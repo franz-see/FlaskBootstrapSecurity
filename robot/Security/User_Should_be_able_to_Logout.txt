@@ -7,6 +7,6 @@ Resource          Resources/Common.txt
 *** Test Cases ***
 Logout
     Given    User is in Login Page
-    When    User Logs In With    ${CORRECT_USERNAME}    ${CORRECT_PASSWORD}
+    When    User Logs In
     When    Logout
     Then    User Should NOT Be Logged In
