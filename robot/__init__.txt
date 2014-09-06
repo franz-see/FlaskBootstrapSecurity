@@ -1,3 +1,4 @@
 *** Settings ***
 Suite Setup       Suite SetUp
+Suite Teardown    Suite Teardown
 Resource          Resources/Common.txt
