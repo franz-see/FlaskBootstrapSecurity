@@ -3,6 +3,8 @@ Resource          Common_Library.txt
 
 *** Variables ***
 ${BASE_URL}       http://localhost:5001/
+${CORRECT_USERNAME}    matt@lp.com
+${CORRECT_PASSWORD}    password
 
 *** Keywords ***
 Suite SetUp
@@ -30,3 +32,12 @@ Logout if Possible
 
 Logout
     Click Link    Logout
+
+User Logs In With
+    [Arguments]    ${username}    ${password}
+    Input Text    email    ${username}
+    Input Text    password    ${password}
+    Click Button    Login
+
+User Logs In
+    User Logs In With    ${CORRECT_USERNAME}    ${CORRECT_PASSWORD}

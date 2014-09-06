@@ -7,23 +7,17 @@ Resource          Resources/Common.txt
 *** Test Cases ***
 Correct Username and Password
     Given    User is in Login Page
-    Given    User Inputs Username    ${CORRECT_USERNAME}
-    Given    User Inputs Password    ${CORRECT_PASSWORD}
-    When    User Logins In
+    When    User Logs In With    ${CORRECT_USERNAME}    ${CORRECT_PASSWORD}
     Then    User Should Be Logged In
 
 Incorrect Username
     Given    User is in Login Page
-    Given    User Inputs Username    ${INCORRECT_USERNAME}
-    Given    User Inputs Password    ${CORRECT_PASSWORD}
-    When    User Logins In
+    When    User Logs In With    ${INCORRECT_USERNAME}    ${CORRECT_PASSWORD}
     Then    User Should NOT Be Logged In
     Then    Page Should Contain    Specified user does not exist
 
 Incorrect Password
     Given    User is in Login Page
-    Given    User Inputs Username    ${CORRECT_USERNAME}
-    Given    User Inputs Password    ${INCORRECT_PASSWORD}
-    When    User Logins In
+    When    User Logs In With    ${CORRECT_USERNAME}    ${INCORRECT_PASSWORD}
     Then    User Should NOT Be Logged In
     Then    Page Should Contain    Invalid password

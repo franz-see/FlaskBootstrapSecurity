@@ -2,25 +2,12 @@
 Resource          Resources/Common_Library.txt
 
 *** Variables ***
-${CORRECT_USERNAME}    matt@lp.com
-${CORRECT_PASSWORD}    password
 ${INCORRECT_USERNAME}    wrong@username.com
 ${INCORRECT_PASSWORD}    wrong password
 
 *** Keywords ***
 User is in Login Page
     Click Link    Login
-
-User Inputs Username
-    [Arguments]    ${username}
-    Input Text    email    ${username}
-
-User Inputs Password
-    [Arguments]    ${password}
-    Input Text    password    ${password}
-
-User Logins In
-    Click Button    Login
 
 User Should Be Logged In
     Page Should Contain    Logout
