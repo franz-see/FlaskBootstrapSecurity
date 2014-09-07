@@ -9,7 +9,8 @@ class Config(object):
         self.HEROKU = False
         self.PRODUCTION = False
 
-        self.SECRET_KEY = '{SECRET_KEY}'
+        # import os; os.urandom(24)
+        self.SECRET_KEY = '\xe3\xc7\x84:\xcc\x01\xbf\xc1\xee\xec\xc1\x80d\x8c\x1e\x93x;$\xde\x82\t(>'
         self.SITE_NAME = 'Flask Site'
         self.LOG_LEVEL = logging.DEBUG
         self.SERVER_NAME = 'localhost:5000'
@@ -37,7 +38,7 @@ class Config(object):
         self.SECURITY_URL_PREFIX = '/auth'
         self.SECUIRTY_POST_LOGIN = '/'
         self.SECURITY_PASSWORD_HASH = 'pbkdf2_sha512'
-        # import uuid; salt = uuid.uuid4().hex
+        # import uuid; uuid.uuid4().hex
         self.SECURITY_PASSWORD_SALT = '2b8b74efc58e489e879810905b6b6d4dc6'
 
         self.SECURITY_CONFIRMABLE = True
