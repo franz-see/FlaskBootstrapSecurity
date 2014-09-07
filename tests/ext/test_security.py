@@ -19,7 +19,7 @@ class TestExtendedLoginForm(UnitTestCase):
         self.log(self.extendedLoginForm)
 
         assert get_message('USER_DOES_NOT_EXIST')[0] not in self.extendedLoginForm.email.errors
-        assert get_message('USER_DOES_NOT_EXIST')[0] in self.extendedLoginForm.form_errors
+        assert ExtendedLoginForm.MSG_INVALID_USERNAME_OR_PASSWORD in self.extendedLoginForm.form_errors
 
     def test_invalid_password(self):
         self.extendedLoginForm.email.data = 'matt@lp.com'
@@ -30,7 +30,7 @@ class TestExtendedLoginForm(UnitTestCase):
         self.log(self.extendedLoginForm)
 
         assert get_message('INVALID_PASSWORD')[0] not in self.extendedLoginForm.password.errors
-        assert get_message('INVALID_PASSWORD')[0] in self.extendedLoginForm.form_errors
+        assert ExtendedLoginForm.MSG_INVALID_USERNAME_OR_PASSWORD in self.extendedLoginForm.form_errors
 
     def log(self, form):
         print "form errors : %s" % ', '.join(form.errors)

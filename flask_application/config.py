@@ -44,8 +44,7 @@ class Config(object):
         self.SECURITY_CONFIRMABLE = True
         self.SECURITY_CHANGEABLE = True
 
-        self.SECURITY_MSG_USER_DOES_NOT_EXIST = ('Incorrect Username or Password', 'error')
-        self.SECURITY_MSG_INVALID_PASSWORD    = ('Incorrect Username or Password', 'error')
+        self.SECURITY_INVALID_LOGIN_MESSAGE = ('Incorrect Username or Password', 'error')
 
         # CACHE
         self.CACHE_TYPE = 'simple'
