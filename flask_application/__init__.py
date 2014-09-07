@@ -18,7 +18,7 @@ def create_app(name=None, config=None):
     #  Config
     effective_config = config or 'flask_application.config.app_config'
     app.config.from_object(effective_config)
-    app.logger.info("Config: %s" % app.config['ENVIRONMENT'])
+    app.logger.info("Config: %s; DB: %s" % (app.config['ENVIRONMENT'], app.config['SQLALCHEMY_DATABASE_URI']))
 
     #  Logging
     import logging
@@ -30,7 +30,7 @@ def create_app(name=None, config=None):
     )
 
     #  Email on errors
-    if not app.debug and not app.testing:
+    if not app.debug:
         import logging.handlers
         mail_handler = logging.handlers.SMTPHandler(
             'localhost',

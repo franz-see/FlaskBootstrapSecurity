@@ -3,7 +3,6 @@
 .virtualenv
 .DS_Store
 .idea
-flask_application/config.py
 static/.webassets-cache
 static/gen
 log.html

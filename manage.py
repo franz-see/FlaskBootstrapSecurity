@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from flask_application import create_app
+from flask_application.config import TestConfig
 from flask.ext.script import Manager, Server
 
 from flask_application.script import ResetDB, PopulateDB
@@ -7,7 +8,8 @@ from flask_application.script import ResetDB, PopulateDB
 from flask.ext.security.script import CreateUserCommand, AddRoleCommand,\
     RemoveRoleCommand, ActivateUserCommand, DeactivateUserCommand
 
-app = create_app()
+import sys
+app = create_app(config=TestConfig()) if sys.argv[1] == 'testserver' else create_app()
 
 manager = Manager(app)
 manager.add_command("runserver", Server())

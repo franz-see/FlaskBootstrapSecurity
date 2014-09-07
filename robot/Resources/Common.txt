@@ -35,9 +35,11 @@ Logout
 
 User Logs In With
     [Arguments]    ${username}    ${password}
+    Logout if Possible
+    Click Link    Login
     Input Text    email    ${username}
     Input Text    password    ${password}
     Click Button    Login
 
-User Logs In
+User is Logged In
     User Logs In With    ${CORRECT_USERNAME}    ${CORRECT_PASSWORD}

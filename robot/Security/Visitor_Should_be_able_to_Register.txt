@@ -1,0 +1,46 @@
+*** Settings ***
+Test Setup        Init Variables
+Test Teardown     Logout if Possible
+Resource          Resources/Common_Library.txt
+Resource          Security_Resource.txt
+Resource          Resources/Common.txt
+
+*** Test Cases ***
+Valid email address and password
+    [Setup]    Init Variables
+    Given    User is in Registration Page
+    When    User Registers With    ${NEW_USERNAME}    ${NEW_PASSWORD}
+    Then    User Should Be Logged In
+    When    Logout
+    Then    User Should be able to Login With    ${NEW_USERNAME}    ${NEW_PASSWORD}
+
+Incorrect email address
+    Given    User is in Registration Page
+    When    User Registers With    wrong email address    ${NEW_PASSWORD}
+    Then    Page Should Contain    Invalid email address
+    Then    User Should NOT Be Logged In
+
+Incorrect password
+    [Setup]    Init Variables
+    Given    User is in Registration Page
+    When    User Registers With    ${NEW_USERNAME}    ${INVALID_NEW_PASSWORD}
+    Then    Page Should Contain    Password must be at least 6 characters
+    Then    User Should NOT Be Logged In
+
+No email address
+    Given    User is in Registration Page
+    When    User Registers With    ${EMPTY}    ${NEW_PASSWORD}
+    Then    Page Should Contain    Email not provided
+    Then    User Should NOT Be Logged In
+
+No password
+    Given    User is in Registration Page
+    When    User Registers With    ${NEW_USERNAME}    ${EMPTY}
+    Then    Page Should Contain    Password not provided
+    Then    User Should NOT Be Logged In
+
+Already registered email address
+    Given    User is in Registration Page
+    When    User Registers With    ${CORRECT_USERNAME}    ${NEW_PASSWORD}
+    Then    Page Should Contain    ${CORRECT_USERNAME} is already associated with an account.
+    Then    User Should NOT Be Logged In

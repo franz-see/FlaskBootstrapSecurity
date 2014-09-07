@@ -17,20 +17,20 @@ class Config(object):
         self.SYS_ADMINS = ['foo@example.com']
 
         # SQLAlchemy support
-        self.SQLALCHEMY_DATABASE_URI = 'sqlite://'
+        self.SQLALCHEMY_DATABASE_URI = os.getenv('FLASK_APPLICATION_SQLALCHEMY_DATABASE_URI')
         self.DB_MAX_PAGE_SIZE = 20
         self.SETUP_DB = False
 
         # Configured for Gmail
-        self.DEFAULT_MAIL_SENDER = 'Admin < username@example.com >'
+        self.DEFAULT_MAIL_SENDER = os.getenv('FLASK_APPLICATION_DEFAULT_MAIL_SENDER')
         self.MAIL_SERVER = 'smtp.gmail.com'
         self.MAIL_PORT = 465
         self.MAIL_USE_SSL = True
-        self.MAIL_USERNAME = 'username@gmail.com'
-        self.MAIL_PASSWORD = '*********'
+        self.MAIL_USERNAME = os.getenv('FLASK_APPLICATION_MAIL_USERNAME')
+        self.MAIL_PASSWORD = os.getenv('FLASK_APPLICATION_MAIL_PASSWORD')
 
         # Flask-Security setup
-        self.SECURITY_EMAIL_SENDER = 'Security < security@example.com >'
+        self.SECURITY_EMAIL_SENDER = os.getenv('FLASK_APPLICATION_SECURITY_EMAIL_SENDER')
         self.SECURITY_LOGIN_WITHOUT_CONFIRMATION = True
         self.SECURITY_REGISTERABLE = True
         self.SECURITY_RECOVERABLE = True
@@ -43,14 +43,15 @@ class Config(object):
         self.SECURITY_CONFIRMABLE = True
         self.SECURITY_CHANGEABLE = True
 
-        self.SECURITY_MSG_USER_DOES_NOT_EXIST = 'Incorrect Username or Password'
-        self.SECURITY_MSG_INVALID_PASSWORD    = 'Incorrect Username or Password'
+        self.SECURITY_MSG_USER_DOES_NOT_EXIST = ('Incorrect Username or Password', 'error')
+        self.SECURITY_MSG_INVALID_PASSWORD    = ('Incorrect Username or Password', 'error')
 
         # CACHE
         self.CACHE_TYPE = 'simple'
 
         self.CSS_ASSETS_FILTER = None
         self.JS_ASSETS_FILTER = None
+
 
 class ProductionConfig(Config):
     def __init__(self):
@@ -59,13 +60,13 @@ class ProductionConfig(Config):
         self.HEROKU = True
         self.PRODUCTION = True
         self.LOG_LEVEL = logging.INFO
-        self.SERVER_NAME = 'example.com'
+        self.SERVER_NAME = 'example'
 
         self.MAIL_SERVER = 'smtp.mandrillapp.com'
         self.MAIL_PORT = 465
         self.MAIL_USE_SSL = True
-        self.MAIL_USERNAME = os.getenv('MANDRILL_USERNAME')
-        self.MAIL_PASSWORD = os.getenv('MANDRILL_APIKEY')
+        self.MAIL_USERNAME = os.getenv('FLASK_APPLICATION_MANDRILL_USERNAME')
+        self.MAIL_PASSWORD = os.getenv('FLASK_APPLICATION_MANDRILL_APIKEY')
 
         self.CSS_ASSETS_FILTER = "cssmin"
         self.JS_ASSETS_FILTER = "rjsmin"
@@ -79,7 +80,7 @@ class TestConfig(Config):
         self.TESTING = True
         self.SERVER_NAME = 'localhost:5001'
         self.SQLALCHEMY_DATABASE_URI = 'sqlite://'
-        self.SETUP_DB = False
+        self.SETUP_DB = True 
 
 class DevelopmentConfig(Config):
     '''
@@ -90,7 +91,6 @@ class DevelopmentConfig(Config):
         super(DevelopmentConfig, self).__init__()
         self.ENVIRONMENT = 'Dev'
         self.DEBUG = True
-        self.TESTING = False
 
 class DevGunicornConfig(Config):
     def __init__(self):

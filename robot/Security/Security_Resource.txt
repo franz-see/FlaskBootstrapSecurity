@@ -1,9 +1,14 @@
 *** Settings ***
 Resource          Resources/Common_Library.txt
+Resource          Security_Resource.txt
+Resource          Resources/Common.txt
 
 *** Variables ***
 ${INCORRECT_USERNAME}    wrong@username.com
 ${INCORRECT_PASSWORD}    wrong password
+${NEW_USERNAME}    replaced in Init Variables
+${NEW_PASSWORD}    new password
+${INVALID_NEW_PASSWORD}    12345    # Less than 6 characters
 
 *** Keywords ***
 User is in Login Page
@@ -14,3 +19,21 @@ User Should Be Logged In
 
 User Should NOT Be Logged In
     Page Should Not Contain    Logout
+
+User is in Registration Page
+    Click Link    Register
+
+User Registers With
+    [Arguments]    ${username}    ${password}
+    Input Text    email    ${username}
+    Input Text    password    ${password}
+    Click Button    Register
+
+User Should be able to Login With
+    [Arguments]    ${username}    ${password}
+    User Logs In With    ${username}    ${password}
+    User Should Be Logged In
+
+Init Variables
+    ${NEW_USERNAME}=    Evaluate    "test" + str(random.randint(0, 1000)) + "@example.com"    random
+    Set Test Variable    ${NEW_USERNAME}    ${NEW_USERNAME}
