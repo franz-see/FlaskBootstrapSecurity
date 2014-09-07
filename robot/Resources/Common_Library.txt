@@ -1,3 +1,4 @@
 *** Settings ***
-Library           Selenium2Library
-Library           ../../flask_application/
+Library           DatabaseLibrary
+Library           ext_selenium.CustomSelenium2Library
+Library           ext_util.CustomUtilLibrary

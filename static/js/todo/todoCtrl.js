@@ -23,8 +23,8 @@ app.controller('TodoCtrl', ['$scope', '$modal', '$filter', 'todoService', functi
         totalServerItems:'totalServerItems',
         pagingOptions: $scope.pagingOptions,
         filterOptions: $scope.filterOptions,
-        columnDefs: [{ field: 'item', displayName: 'Item', width: '80%' },
-                     { field: 'date', displayName: 'Date', width: '20%', cellFilter: "date:'" + $scope.DATE_FORMAT + "'", cellClass : 'rightAlign' }
+        columnDefs: [{ field: 'item', displayName: 'Item', width: '80%', cellClass : '_todo_item' },
+                     { field: 'date', displayName: 'Date', width: '20%', cellFilter: "date:'" + $scope.DATE_FORMAT + "'", cellClass : 'rightAlign _todo_date' }
         ]
     };
 

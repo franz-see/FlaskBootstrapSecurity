@@ -1,6 +1,6 @@
 import logging
 import os
-
+import tempfile
 
 class Config(object):
     def __init__(self):
@@ -79,8 +79,9 @@ class TestConfig(Config):
         self.DEBUG = False
         self.TESTING = True
         self.SERVER_NAME = 'localhost:5001'
-        self.SQLALCHEMY_DATABASE_URI = 'sqlite://'
-        self.SETUP_DB = True 
+        self.SQLALCHEMY_DATABASE_URI = "sqlite:///%s/flask_application.db" % tempfile.gettempdir()
+        self.LOGIN_DISABLED = False
+        self.SETUP_DB = True
 
 class DevelopmentConfig(Config):
     '''

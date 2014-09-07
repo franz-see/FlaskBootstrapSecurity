@@ -3,14 +3,19 @@ Resource          Common_Library.txt
 
 *** Variables ***
 ${BASE_URL}       http://localhost:5001/
+${LOGIN_PAGE_URL}    ${BASE_URL}auth/login
 ${USER_USERNAME}    matt@lp.com
 ${USER_PASSWORD}    password
+${USER_ID}        1
 
 *** Keywords ***
 Suite SetUp
     Open Browser    ${BASE_URL}
     Maximize Browser Window
     Wait Until Page Contains    Login
+    ${sqlite_db}=    Set Variable    ${TEMPDIR}${/}flask_application.db
+    Connect to Database Using Custom Params    sqlite3    '${sqlite_db}'
+    Log    Connecting to ${sqlite_db}
 
 Given
     [Arguments]    @{args}
@@ -43,3 +48,11 @@ User Logs In With
 
 User is Logged In
     User Logs In With    ${USER_USERNAME}    ${USER_PASSWORD}
+
+User is NOT Logged In
+    Logout if Possible
+
+Current Page Should be In
+    [Arguments]    ${page}
+    ${current_url}=    Get Location
+    Should Start With    ${current_url}    ${page}

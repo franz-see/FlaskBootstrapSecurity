@@ -1,0 +1,15 @@
+*** Settings ***
+Resource          Resources/Common_Library.txt
+Resource          Resources/Common.txt
+Resource          Todo_Resource.txt
+
+*** Test Cases ***
+Should be able to list Todos I own
+    Given    User is Logged In
+    When    User is in Todo Page
+    Then    Should List Recent 5 Todo Items
+
+Security
+    Given    User is NOT Logged In
+    When    User is in Todo Page
+    Then    Current Page Should be In    ${LOGIN_PAGE_URL}

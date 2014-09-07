@@ -22,7 +22,7 @@ class TodoView(TemplateView):
     route = '/'
     template_name = 'todo/index.html'
     decorators = [login_required]
-    
+
     def get_context_data(self, *args, **kwargs):
         return {}
 
