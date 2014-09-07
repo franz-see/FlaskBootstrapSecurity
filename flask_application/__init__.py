@@ -87,12 +87,13 @@ def create_app(name=None, config=None):
 
     from flask.ext.security import SQLAlchemyUserDatastore
     from flask_application.models import User, Role
+    from flask_application.ext.flask_security import ExtendedLoginForm
 
     # Setup Flask-Security
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     app.user_datastore = user_datastore
 
-    security.init_app(app=app, datastore=user_datastore)
+    security.init_app(app=app, datastore=user_datastore, login_form=ExtendedLoginForm)
     app.security = security
 
 

@@ -1,0 +1,7 @@
+{% macro form_errors(form) %}
+  {%- if form.form_errors %}
+    {%- for form_error in form.form_errors %}
+      <div class="label label-danger">{{form_error}}</div>
+    {%- endfor %}
+  {%- endif %}
+{%- endmacro %}
