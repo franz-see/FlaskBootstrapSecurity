@@ -37,3 +37,26 @@ User Should be able to Login With
 Init Variables
     ${NEW_USERNAME}=    Evaluate    "test" + str(random.randint(0, 1000)) + "@example.com"    random
     Set Test Variable    ${NEW_USERNAME}    ${NEW_USERNAME}
+
+User is in Change Password
+    Click Element    xpath=//a[starts-with(text(), "Hello") and contains(text(), "(Profile)")]
+
+Password should have changed from _ to _
+    [Arguments]    ${username}    ${old_password}    ${new_password}
+    User Logs In With    ${username}    ${old_password}
+    Page Should Contain    Incorrect Username or Password
+    User Should be able to Login With    ${username}    ${new_password}
+
+Create New User
+    Init Variables
+    Logout if Possible
+    User is in Registration Page
+    User Registers With    ${NEW_USERNAME}    ${USER_PASSWORD}
+    Logout if Possible
+
+User Changes Password With
+    [Arguments]    ${current_password}    ${new_password}    ${confirm_password}
+    Input Password    password    ${current_password}
+    Input Password    new_password    ${new_password}
+    Input Password    new_password_confirm    ${confirm_password}
+    Click Button    Change Password

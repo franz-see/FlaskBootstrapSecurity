@@ -41,6 +41,6 @@ No password
 
 Already registered email address
     Given    User is in Registration Page
-    When    User Registers With    ${CORRECT_USERNAME}    ${NEW_PASSWORD}
-    Then    Page Should Contain    ${CORRECT_USERNAME} is already associated with an account.
+    When    User Registers With    ${USER_USERNAME}    ${NEW_PASSWORD}
+    Then    Page Should Contain    ${USER_USERNAME} is already associated with an account.
     Then    User Should NOT Be Logged In

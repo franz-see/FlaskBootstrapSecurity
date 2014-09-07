@@ -6,25 +6,25 @@ Resource          Resources/Common.txt
 
 *** Test Cases ***
 Correct Username and Password
-    When    User Logs In With    ${CORRECT_USERNAME}    ${CORRECT_PASSWORD}
+    When    User Logs In With    ${USER_USERNAME}    ${USER_PASSWORD}
     Then    User Should Be Logged In
 
 Incorrect Username
-    When    User Logs In With    ${INCORRECT_USERNAME}    ${CORRECT_PASSWORD}
+    When    User Logs In With    ${INCORRECT_USERNAME}    ${USER_USERNAME}
     Then    User Should NOT Be Logged In
     Then    Page Should Contain    Incorrect Username or Password
 
 Incorrect Password
-    When    User Logs In With    ${CORRECT_USERNAME}    ${INCORRECT_PASSWORD}
+    When    User Logs In With    ${USER_USERNAME}    ${INCORRECT_PASSWORD}
     Then    User Should NOT Be Logged In
     Then    Page Should Contain    Incorrect Username or Password
 
 No Username
-    When    User Logs In With    ${EMPTY}    ${CORRECT_PASSWORD}
+    When    User Logs In With    ${EMPTY}    ${USER_PASSWORD}
     Then    User Should NOT Be Logged In
     Then    Page Should Contain    Email not provided
 
 No Password
-    When    User Logs In With    ${CORRECT_USERNAME}    ${EMPTY}
+    When    User Logs In With    ${USER_USERNAME}    ${EMPTY}
     Then    User Should NOT Be Logged In
     Then    Page Should Contain    Password not provided
