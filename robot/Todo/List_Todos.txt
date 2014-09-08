@@ -4,19 +4,19 @@ Resource          Resources/Common.txt
 Resource          Todo_Resource.txt
 
 *** Test Cases ***
-Should be logged in first before accessing the Todo Page
+Should be Logged in First Before Accessing the Todo Page
     Given    User is NOT Logged In
     When    User is in Todo Page
     Then    Current Page Should be In    ${LOGIN_PAGE_URL}
 
-Should be able to list Todos I own
+Should be able to List Todos I own
     Given    User is Logged In
     When    User is in Todo Page
     Then    Should List Recent Todo Items from _ with limit _    0    5
     Then    Total Count Should be Correct
     Then    Total Number of Pages Should be Correct
 
-Should be able to move to the Next and Previous Page
+Should be able to Move to the Next and Previous Page
     Given    User is Logged In
     Given    User is in Todo Page
     When    User Goes to Next Todo Page
@@ -26,7 +26,17 @@ Should be able to move to the Next and Previous Page
     When    User Goes to Previous Todo Page
     Then    Should List Recent Todo Items from _ with limit _    0    5
 
-Should be able to move to Change the Current Page
+Should be able to Move to the Last and First Page
+    Given    User is Logged In
+    Given    User is in Todo Page
+    When    User Goes to Last Page
+    Then    Should List Last _ Recent Todo Items    5
+    When    User Goes to First Page
+    Then    Should List Recent Todo Items from _ with limit _    0    5
+    Then    Total Count Should be Correct
+    Then    Total Number of Pages Should be Correct
+
+Should be able to Change the Current Page to a Specific Page
     Given    User is Logged In
     Given    User is in Todo Page
     When    User Goes to Todo Page    3
@@ -39,15 +49,5 @@ Should be able to Change Page Size
     Given    User is in Todo Page
     When    User Changes Page Size To    10
     Then    Should List Recent Todo Items from _ with limit _    0    10
-    Then    Total Count Should be Correct
-    Then    Total Number of Pages Should be Correct
-
-Should be able to move to the Last and First Page
-    Given    User is Logged In
-    Given    User is in Todo Page
-    When    User Goes to Last Page
-    Then    Should List Last _ Recent Todo Items    5
-    When    User Goes to First Page
-    Then    Should List Recent Todo Items from _ with limit _    0    5
     Then    Total Count Should be Correct
     Then    Total Number of Pages Should be Correct

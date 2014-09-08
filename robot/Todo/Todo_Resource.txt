@@ -59,6 +59,16 @@ User Goes to Next Todo Page
     ${next_page}=    Evaluate    str(${current_page} + 1)
     Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE}    ${next_page}
 
+User Goes to First Page
+    Click Element    //button[@title='First Page']
+    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE}    1
+
+User Goes to Last Page
+    Click Element    //button[@title='Last Page']
+    ${max_pages_label}=    Get Text    css=.ngGridMaxPagesNumber
+    ${last_page}=    Evaluate    "${max_pages_label}".split('/ ')[1]
+    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE}    ${last_page}
+
 User Goes to Todo Page
     [Arguments]    ${new_page}
     Input Text    css=.ngPagerCurrent    ${new_page}
@@ -81,13 +91,3 @@ Total Number of Pages Should be Correct
     ${expected_num_of_pages}=    Evaluate    '/ ' + str(int(math.ceil(${row_count}/(1.0 * ${page_size}))))    math
     ${actual_num_of_pages}=    Get Text    css=.ngGridMaxPagesNumber
     Should Be Equal    ${expected_num_of_pages}    ${actual_num_of_pages}
-
-User Goes to Last Page
-    Click Element    //button[@title='Last Page']
-    ${max_pages_label}=    Get Text    css=.ngGridMaxPagesNumber
-    ${last_page}=    Evaluate    "${max_pages_label}".split('/ ')[1]
-    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE}    ${last_page}
-
-User Goes to First Page
-    Click Element    //button[@title='First Page']
-    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE}    1
