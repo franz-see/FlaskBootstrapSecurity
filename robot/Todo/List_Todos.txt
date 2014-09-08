@@ -4,12 +4,24 @@ Resource          Resources/Common.txt
 Resource          Todo_Resource.txt
 
 *** Test Cases ***
-Should be able to list Todos I own
-    Given    User is Logged In
-    When    User is in Todo Page
-    Then    Should List Recent 5 Todo Items
-
-Security
+Should be logged in first before accessing the Todo Page
     Given    User is NOT Logged In
     When    User is in Todo Page
     Then    Current Page Should be In    ${LOGIN_PAGE_URL}
+
+Should be able to list Todos I own
+    Given    User is Logged In
+    When    User is in Todo Page
+    Then    Should List Recent Todo Items from _ with limit _    0    5
+
+Should be able to move to the Next Page
+    Given    User is Logged In
+    Given    User is in Todo Page
+    When    User Goes to Next Todo Page
+    Then    Should List Recent Todo Items from _ with limit _    5    5
+
+Should be able to move to Change the Current Page
+    Given    User is Logged In
+    Given    User is in Todo Page
+    When    User Goes to Todo Page    3
+    Then    Should List Recent Todo Items from _ with limit _    10    5

@@ -4,6 +4,7 @@ app.controller('TodoCtrl', ['$scope', '$modal', '$filter', 'todoService', functi
     $scope.todos = [];
     $scope.totalServerItems = 0;
     $scope.selectedTodos = [];
+    $scope.returnedPage;
 
     $scope.filterOptions = {
         filterText: "",
@@ -145,6 +146,7 @@ app.controller('TodoCtrl', ['$scope', '$modal', '$filter', 'todoService', functi
             Todo.query(queryParams, function(value) {
                 $scope.todos = value['results'];
                 $scope.totalServerItems = value['total_size'];
+                $scope.returnedPage = value['page'];
                 if (!$scope.$$phase) {
                     $scope.$apply();
                 }

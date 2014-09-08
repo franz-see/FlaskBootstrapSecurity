@@ -6,9 +6,10 @@ Resource          Resources/Common.txt
 User is in Todo Page
     Click Link    Todo
 
-Should List Recent 5 Todo Items
+Should List Recent Todo Items from _ with limit _
+    [Arguments]    ${offset}    ${count}
     Comment    Query Top 5 Todos
-    @{query_results}    Query    select item, date from todo where owner = ${USER_ID} order by date desc limit 5
+    @{query_results}    Query    select item, date from todo where owner = ${USER_ID} order by date desc limit ${offset}, ${count}
     Comment    Reformat the dates
     ${query_todo_item}    ${query_todo_dates}=    Split By Columns    ${query_results}
     @{query_todo_dates_formatted}=    Convert Date Format    ${query_todo_dates}    %Y-%m-%d %H:%M:%S.%f    %B %d, %Y
@@ -18,4 +19,17 @@ Should List Recent 5 Todo Items
     @{todo_dates_from_webpage}=    Get All Text    xpath=//div[contains(@class, '_todo_date')]//span[contains(@class, 'ng-binding')]
     @{todos_from_webpage}=    Combine By Columns    ${todo_items_from_webpage}    ${todo_dates_from_webpage}
     Comment    Compare Todo items from Query vs Todo items from Web Page
+    Log    Comparing query vs webpage : @{todos_from_query} vs @{todos_from_webpage}
+    Capture Page Screenshot
     Should Be Equal    ${todos_from_query}    ${todos_from_webpage}
+
+User Goes to Next Todo Page
+    ${current_page}=    Get Element Attribute    _returned_page@_page
+    Click Element    //button[@title='Next Page']
+    ${next_page}=    Evaluate    str(${current_page} + 1)
+    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    _returned_page@_page    ${next_page}
+
+User Goes to Todo Page
+    [Arguments]    ${new_page}
+    Input Text    css=.ngPagerCurrent    ${new_page}
+    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    _returned_page@_page    ${new_page}
