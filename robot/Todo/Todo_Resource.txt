@@ -27,6 +27,12 @@ Should List Recent Todo Items from _ with limit _
     Capture Page Screenshot
     Should Be Equal    ${todos_from_query}    ${todos_from_webpage}
 
+User Goes to Previous Todo Page
+    ${current_page}=    Get Element Attribute    ${LOCATOR_RETURNED_PAGE}
+    Click Element    //button[@title='Previous Page']
+    ${next_page}=    Evaluate    str(${current_page} - 1)
+    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE}    ${next_page}
+
 User Goes to Next Todo Page
     ${current_page}=    Get Element Attribute    ${LOCATOR_RETURNED_PAGE}
     Click Element    //button[@title='Next Page']
