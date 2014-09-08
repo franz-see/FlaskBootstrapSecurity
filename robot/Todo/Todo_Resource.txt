@@ -2,6 +2,10 @@
 Resource          Resources/Common_Library.txt
 Resource          Resources/Common.txt
 
+*** Variables ***
+${LOCATOR_RETURNED_PAGE}    __returned_page@__page
+${LOCATOR_RETURNED_PAGE_SIZE}    __returned_page_size@__page_size
+
 *** Keywords ***
 User is in Todo Page
     Click Link    Todo
@@ -24,12 +28,17 @@ Should List Recent Todo Items from _ with limit _
     Should Be Equal    ${todos_from_query}    ${todos_from_webpage}
 
 User Goes to Next Todo Page
-    ${current_page}=    Get Element Attribute    _returned_page@_page
+    ${current_page}=    Get Element Attribute    ${LOCATOR_RETURNED_PAGE}
     Click Element    //button[@title='Next Page']
     ${next_page}=    Evaluate    str(${current_page} + 1)
-    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    _returned_page@_page    ${next_page}
+    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE}    ${next_page}
 
 User Goes to Todo Page
     [Arguments]    ${new_page}
     Input Text    css=.ngPagerCurrent    ${new_page}
-    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    _returned_page@_page    ${new_page}
+    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE}    ${new_page}
+
+User Changes Page Size To
+    [Arguments]    ${new_page_size}
+    Select From List By Value    //*[@ng-model="pagingOptions.pageSize"]    ${new_page_size}
+    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE_SIZE}    ${new_page_size}

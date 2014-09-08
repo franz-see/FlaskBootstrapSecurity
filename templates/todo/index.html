@@ -16,7 +16,8 @@
 
 {% block content %}
 <div class="container-fluid" ng-controller="TodoCtrl">
-    <div id="_returned_page" _page="{{ '{{returnedPage}}' }}"></div>
+    <div id="__returned_page" __page="{{ '{{__returnedPage}}' }}"></div>
+    <div id="__returned_page_size" __page_size="{{ '{{__returnedPageSize}}' }}"></div>
     <div class="row">
         <div class="col-md-7 col-md-offset-1">
             <h1>Todo</h1>

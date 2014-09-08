@@ -4,7 +4,8 @@ app.controller('TodoCtrl', ['$scope', '$modal', '$filter', 'todoService', functi
     $scope.todos = [];
     $scope.totalServerItems = 0;
     $scope.selectedTodos = [];
-    $scope.returnedPage;
+    $scope.__returnedPage;
+    $scope.__returnedPageSize;
 
     $scope.filterOptions = {
         filterText: "",
@@ -30,7 +31,7 @@ app.controller('TodoCtrl', ['$scope', '$modal', '$filter', 'todoService', functi
     };
 
     $scope.$watch('pagingOptions', function (newVal, oldVal) {
-        if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
+        if (newVal !== oldVal && (newVal.currentPage !== oldVal.currentPage || newVal.pageSize != oldVal.pageSize )) {
           _getPagedDataAsync();
         }
     }, true);
@@ -146,7 +147,8 @@ app.controller('TodoCtrl', ['$scope', '$modal', '$filter', 'todoService', functi
             Todo.query(queryParams, function(value) {
                 $scope.todos = value['results'];
                 $scope.totalServerItems = value['total_size'];
-                $scope.returnedPage = value['page'];
+                $scope.__returnedPage = value['page'];
+                $scope.__returnedPageSize = value['page_size']
                 if (!$scope.$$phase) {
                     $scope.$apply();
                 }
