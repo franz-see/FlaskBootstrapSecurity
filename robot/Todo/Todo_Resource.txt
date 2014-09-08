@@ -42,3 +42,16 @@ User Changes Page Size To
     [Arguments]    ${new_page_size}
     Select From List By Value    //*[@ng-model="pagingOptions.pageSize"]    ${new_page_size}
     Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE_SIZE}    ${new_page_size}
+
+Total Count Should be Correct
+    @{query_results}=    Query    select count(1) from todo where owner = ${USER_ID}
+    ${row_count}=    Set Variable    ${query_results[0][0]}
+    Page Should Contain    Total Items: ${row_count}
+
+Total Number of Pages Should be Correct
+    @{query_results}=    Query    select count(1) from todo where owner = ${USER_ID}
+    ${row_count}=    Set Variable    ${query_results[0][0]}
+    ${page_size}=    Get Selected List Value    //*[@ng-model="pagingOptions.pageSize"]
+    ${expected_num_of_pages}=    Evaluate    '/ ' + str(int(math.ceil(${row_count}/(1.0 * ${page_size}))))    math
+    ${actual_num_of_pages}=    Get Text    css=.ngGridMaxPagesNumber
+    Should Be Equal    ${expected_num_of_pages}    ${actual_num_of_pages}

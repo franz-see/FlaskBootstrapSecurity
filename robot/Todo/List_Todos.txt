@@ -13,6 +13,8 @@ Should be able to list Todos I own
     Given    User is Logged In
     When    User is in Todo Page
     Then    Should List Recent Todo Items from _ with limit _    0    5
+    Then    Total Count Should be Correct
+    Then    Total Number of Pages Should be Correct
 
 Should be able to move to the Next Page
     Given    User is Logged In
