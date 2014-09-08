@@ -27,6 +27,26 @@ Should List Recent Todo Items from _ with limit _
     Capture Page Screenshot
     Should Be Equal    ${todos_from_query}    ${todos_from_webpage}
 
+Should List Last _ Recent Todo Items
+    [Arguments]    ${count}
+    @{query_results}=    Query    select count(1) from todo where owner = ${USER_ID}
+    ${row_count}=    Set Variable    ${query_results[0][0]}
+    ${offset}=    Evaluate    ${row_count}-${count}
+    Comment    Query Last X Todos
+    @{query_results}    Query    select item, date from todo where owner = ${USER_ID} order by date desc limit ${offset}, ${count}
+    Comment    Reformat the dates
+    ${query_todo_item}    ${query_todo_dates}=    Split By Columns    ${query_results}
+    @{query_todo_dates_formatted}=    Convert Date Format    ${query_todo_dates}    %Y-%m-%d %H:%M:%S.%f    %B %d, %Y
+    @{todos_from_query}=    Combine By Columns    ${query_todo_item}    ${query_todo_dates_formatted}
+    Comment    Get Todo items in Web Page
+    @{todo_items_from_webpage}=    Get All Text    xpath=//div[contains(@class, '_todo_item')]//span[contains(@class, 'ng-binding')]
+    @{todo_dates_from_webpage}=    Get All Text    xpath=//div[contains(@class, '_todo_date')]//span[contains(@class, 'ng-binding')]
+    @{todos_from_webpage}=    Combine By Columns    ${todo_items_from_webpage}    ${todo_dates_from_webpage}
+    Comment    Compare Todo items from Query vs Todo items from Web Page
+    Log    Comparing query vs webpage : @{todos_from_query} vs @{todos_from_webpage}
+    Capture Page Screenshot
+    Should Be Equal    ${todos_from_query}    ${todos_from_webpage}
+
 User Goes to Previous Todo Page
     ${current_page}=    Get Element Attribute    ${LOCATOR_RETURNED_PAGE}
     Click Element    //button[@title='Previous Page']
@@ -61,3 +81,13 @@ Total Number of Pages Should be Correct
     ${expected_num_of_pages}=    Evaluate    '/ ' + str(int(math.ceil(${row_count}/(1.0 * ${page_size}))))    math
     ${actual_num_of_pages}=    Get Text    css=.ngGridMaxPagesNumber
     Should Be Equal    ${expected_num_of_pages}    ${actual_num_of_pages}
+
+User Goes to Last Page
+    Click Element    //button[@title='Last Page']
+    ${max_pages_label}=    Get Text    css=.ngGridMaxPagesNumber
+    ${last_page}=    Evaluate    "${max_pages_label}".split('/ ')[1]
+    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE}    ${last_page}
+
+User Goes to First Page
+    Click Element    //button[@title='First Page']
+    Wait Until Keyword Succeeds    5s    1s    Element Attribute Should Be    ${LOCATOR_RETURNED_PAGE}    1
